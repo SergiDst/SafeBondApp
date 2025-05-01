@@ -84,7 +84,7 @@ const LearningPathScreen = () => {
     const handleScroll = (event) => {
         const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
 
-        const estaEnFinal = contentOffset.y + layoutMeasurement.height >= contentSize.height - 20;
+        const estaEnFinal = contentOffset.y + layoutMeasurement.height >= contentSize.height - 30;
         const estaEnInicio = contentOffset.y <= 20;
         if (estaEnFinal) {
             setEnFinal(true);
@@ -143,7 +143,7 @@ const LearningPathScreen = () => {
                     if (enFinal) {
                         flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
                     } else {
-                        flatListRef.current?.scrollToEnd({ animated: true });
+                        flatListRef.current?.scrollToEnd();
                     }
                 }}
                 style={styles.btnSubir}

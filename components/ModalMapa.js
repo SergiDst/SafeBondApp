@@ -5,6 +5,8 @@ import { StyleSheet, Text, View, Image, Pressable, Modal, ActivityIndicator, Ani
 const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
     tituloModal, setTituloModal, subtitulo1, setSubtitulo1,
     texto1, setTexto1, texto2, setTexto2 }) => {
+    
+    const navigation = useNavigation();
 
     useEffect(() => {
         if (!modalVisible) {
@@ -32,14 +34,6 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
                             <Text style={styles.textStyle}>{texto2}</Text>
                         </View>
                     </View>
-                    <View style={styles.containerButton}>
-                        <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(false)}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Cerrar</Text>
-                        </Pressable>
-                        <Pressable style={[styles.button, styles.buttonOpen]}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Completar</Text>
-                        </Pressable>
-                    </View>
                 </>
             );
             break;
@@ -48,14 +42,6 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
                 <View>
                     <Text>{texto1}</Text>
                     <Text>{texto2}</Text>
-                    <View style={styles.containerButton}>
-                        <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(false)}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Cerrar</Text>
-                        </Pressable>
-                        <Pressable style={[styles.button, styles.buttonOpen]}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Completar</Text>
-                        </Pressable>
-                    </View>
                 </View>
             );
             break;
@@ -66,14 +52,6 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
                     <Text>{texto2}</Text>
                     <View>
 
-                    </View>
-                    <View style={styles.containerButton}>
-                        <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(false)}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Cerrar</Text>
-                        </Pressable>
-                        <Pressable style={[styles.button, styles.buttonOpen]}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Completar</Text>
-                        </Pressable>
                     </View>
                 </View>
             );
@@ -92,6 +70,17 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
                 <View style={styles.modalView}>
                     <Text style={styles.titulo}>{tituloModal}</Text>
                     {content}
+                    <View style={styles.containerButton}>
+                        <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(false)}>
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Cerrar</Text>
+                        </Pressable>
+                        <Pressable style={[styles.button, styles.buttonOpen]} onPress={() => {
+                            setModalVisible(false)
+                            navigation.navigate("Lecciones")
+                        }}>
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Completar</Text>
+                        </Pressable>
+                    </View>
                 </View>
             </View>
         </Modal>

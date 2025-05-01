@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider } from 'react-native-paper';
 import LearningPathScreen from './screens/LearningPathScreen'
+import LeccionMapaScreen from './screens/LeccionMapaScreen';
 import InfanteScreen from './screens/InfanteScreen';
 import Articulos from './screens/Articulos'
 import Ejercicios from './screens/Ejercicios'
@@ -24,7 +25,8 @@ export default function App() {
       tabBarLabelStyle: {
         fontSize: 15,
         fontWeight: 'bold',
-      },}}>
+      },
+    }}>
       <Tab.Screen
         name="Articulos"
         component={Articulos}
@@ -38,7 +40,7 @@ export default function App() {
         name="Camino"
         component={LearningPathScreen}
         options={{
-          headerShown:false,
+          headerShown: false,
           tabBarIcon: ({ focused }) => (
             <Image source={require('./assets/icon.png')} style={styles.iconTab} />
           ),
@@ -71,8 +73,9 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator initialRouteName='Tabs' screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
-            </Stack.Navigator>
+            <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
+            <Stack.Screen name="Lecciones" component={LeccionMapaScreen}></Stack.Screen>
+          </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>
     </PaperProvider>
