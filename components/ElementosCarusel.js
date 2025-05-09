@@ -1,74 +1,52 @@
-import { Dimensions, Image, StyleSheet } from 'react-native';
-import Animated, {
-    useAnimatedStyle,
-    interpolate,
-    Extrapolation
-} from "react-native-reanimated";
+import React from 'react';
+import { View, StyleSheet, Dimensions, Text, Pressable } from 'react-native';
+import Animated, {useAnimatedStyle, interpolate, Extrapolation} from 'react-native-reanimated';
+import { useFonts, MochiyPopOne_400Regular, } from '@expo-google-fonts/mochiy-pop-one';
 
-const { width } = Dimensions.get('window');
-const ITEM_WIDTH = width / 3.6;
+const { width, height} = Dimensions.get('window');
+const ITEM_WIDTH = width * 0.34;
+const ITEM_HEIGHT = height / 3.6;
 
-const ElementosCarusel = ({ index, item, contentOffset }) => {
-
-    const rStyle = useAnimatedStyle(() => {
-
-        //Posiciones del scroll para realizar algo
-        const inputRange = [
-            (index - 1) * ITEM_WIDTH,
-            index * ITEM_WIDTH,
-            (index + 1) * ITEM_WIDTH,
-        ];
-        
-        //Curvatura de la lista
-        const translateY = interpolate(
-            contentOffset.value,
-            inputRange,
-            [80, 15, 80],
+const ElementosCarusel = ({ icono: Icono, nombreIcono, animatedValue, accion}) => {
+    const [fontsLoaded] = useFonts({MochiyPopOne_400Regular,});
+    const animatedTextStyle = useAnimatedStyle(() => {
+        const opacity = interpolate(
+            animatedValue.value,
+            [-1, -0.5, 0, 0.5, 1],
+            [ 1, 0.3, 0, 0.3, 1],
             Extrapolation.CLAMP
         );
-        
-        //Tamaño del objeto
-        const scale = interpolate(
-            contentOffset.value,
-            inputRange,
-            [0.7, 1.4, 0.7],
-            Extrapolation.CLAMP
-        );
-
 
         return {
-            transform: [
-                { translateX:  ITEM_WIDTH },
-                { translateY: -translateY },
-                { scale }
-            ]
+            opacity,
         };
-    });
+    }, []);
 
     return (
-        <Animated.View style={[styles.itemCarusel, rStyle]}>
-            <Image
-                source={item}
-                style={{
-                    flex: 1,
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 100,
-                }}
-                resizeMode="contain"
-            />
-        </Animated.View>
+        <View style={styles.itemContainer}>
+            <Pressable onPress={accion}>
+                <Icono width={ITEM_WIDTH} height={ITEM_HEIGHT} ></Icono>
+            </Pressable>
+            <Animated.View style={[animatedTextStyle]}>
+                <Text style={styles.texto}>{nombreIcono}</Text>
+            </Animated.View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    itemCarusel: {
-        width: ITEM_WIDTH,
-        height: ITEM_WIDTH,
+    itemContainer: {
+        paddingTop:height/5,
+        width: width * 0.52,
+        height: height / 3,
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: 10,
     },
+    texto: {
+        fontSize: width / 15,
+        fontWeight: 'bold',
+        fontFamily: 'MochiyPopOne_400Regular'
+    }
 });
 
 export default ElementosCarusel;

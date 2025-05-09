@@ -104,12 +104,13 @@ const LearningPathScreen = () => {
         setTexto2(contenido?.texto2 || '');
         setModalVisible(true);
     };
+    
     return (
         <View style={styles.container}>
             <Appbar.Header mode="center-aligned" style={styles.appbar}>
                 <IndicadorLabel posicion="recuadroIzq" icono="monedas" numMonedas={40} />
                 <View style={styles.circulo}>
-                    <Text>{Math.ceil((completados / botones.length) * 100)}%</Text>
+                    <Text style={{ fontFamily: 'MochiyPopOne_400Regular', }}>{Math.ceil((completados / botones.length) * 100)}%</Text>
                 </View>
                 <IndicadorLabel posicion="recuadroDer" icono="bandera" numCompletados={completados} />
             </Appbar.Header>

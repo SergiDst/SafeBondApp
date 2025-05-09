@@ -1,12 +1,27 @@
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { ProgressBar } from "react-native-paper";
+import { useFonts, MochiyPopOne_400Regular, } from '@expo-google-fonts/mochiy-pop-one';
 
 const { width, height } = Dimensions.get('window');
 
 const StatsBar = ({ progreso, nombreEstadistica, icono: Icono }) => {
+    const [fontsLoaded] = useFonts({
+        MochiyPopOne_400Regular,
+    });
     return (
         <View>
+            <View>
+                <Text
+                    style={{
+                        position: 'absolute',
+                        marginTop: height/75,
+                        marginStart: width * 0.2,
+                        fontFamily: 'MochiyPopOne_400Regular',
+                    }}>
+                    {nombreEstadistica}
+                </Text>
+            </View>
             <ProgressBar style={styles.recuadroIzq}
                 progress={progreso}
                 color="orange"
@@ -20,7 +35,7 @@ const StatsBar = ({ progreso, nombreEstadistica, icono: Icono }) => {
 
 const styles = StyleSheet.create({
     circulo: {
-        position:'absolute',
+        position: 'absolute',
         right: width * 0.68,
         width: width * 0.18,
         height: width * 0.18,
