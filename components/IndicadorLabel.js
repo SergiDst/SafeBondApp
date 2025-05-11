@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { useFonts, MochiyPopOne_400Regular, } from '@expo-google-fonts/mochiy-pop-one';
 import Monedas from '../assets/monedas.svg'
 import Bandera from '../assets/bandera.svg'
 
@@ -7,10 +8,13 @@ const { width, height } = Dimensions.get('window');
 
 const IndicadorLabel = ({ posicion, icono, numCompletados, numMonedas }) => {
     const posicionRecuadro = styles[posicion] || {};
+    const [fontsLoaded] = useFonts({
+            MochiyPopOne_400Regular,
+        });
     return (
         <View>
             <View style={[posicionRecuadro]}>
-                <Text style={{ fontWeight: 'bold', color: 'white' }}>
+                <Text style={{ fontWeight: 'bold', color: 'white', fontFamily: 'MochiyPopOne_400Regular'}}>
                     {icono === 'monedas' ? numMonedas : numCompletados}
                 </Text>
             </View>

@@ -5,6 +5,10 @@ import StatsBar from '../components/StatsBar';
 import Emocion from '../assets/emocion.svg'
 import Seguimiento from '../assets/Seguimiento.svg'
 import Vinculo from '../assets/vinculo.svg'
+import Comportamiento from '../assets/Comportamiento.svg'
+import Edad from '../assets/Edad.svg'
+import Estatura from '../assets/Estatura.svg'
+import Peso from '../assets/Peso.svg'
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,19 +19,17 @@ const estadisticas = [
 ];
 
 const datos = [
-    require('../assets/icon.png'),
-    require('../assets/icon.png'),
-    require('../assets/icon.png'),
-    require('../assets/icon.png'),
-    require('../assets/icon.png'),
-    require('../assets/icon.png'),
+    { icono: Comportamiento, nombreIcono: 'Comportamiento' },
+    { icono: Edad, nombreIcono: 'Edad' },
+    { icono: Estatura, nombreIcono: 'Estatura' },
+    { icono: Peso, nombreIcono: 'Peso' },
 ];
+
 
 const InfanteScreen = () => {
     return (
         <View style={styles.container}>
             <CaruselCircular datos={datos} />
-            <View style={{ paddingBottom: 100 }}></View>
             <FlatList
                 style={styles.containerSecundario}
                 contentContainerStyle={{ paddingVertical: 10 }}

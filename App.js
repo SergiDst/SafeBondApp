@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider } from 'react-native-paper';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import LearningPathScreen from './screens/LearningPathScreen'
 import LeccionMapaScreen from './screens/LeccionMapaScreen';
 import InfanteScreen from './screens/InfanteScreen';
