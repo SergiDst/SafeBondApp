@@ -15,6 +15,7 @@ import InfanteScreen from './screens/InfanteScreen';
 import Articulos from './screens/Articulos'
 import Ejercicios from './screens/Ejercicios'
 import Login from './screens/Login'
+import { ListaArticulos } from './screens/ListaArticulos';
 
 export default function App() {
 
