@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Dimensions, FlatList } from 'react-native';
-import CaruselCircular from '../components/CaruselCircular';
-import StatsBar from '../components/StatsBar';
+import { StyleSheet, Text, View, Dimensions, FlatList, Pressable } from 'react-native';
+import ModalFormulario from '../components/componentesInfantes/ModalFormulario';
+import CaruselCircular from '../components/componentesInfantes/CaruselCircular';
+import StatsBar from '../components/componentesInfantes/StatsBar';
 import Emocion from '../assets/emocion.svg'
 import Seguimiento from '../assets/Seguimiento.svg'
 import Vinculo from '../assets/vinculo.svg'
@@ -27,9 +28,24 @@ const datos = [
 
 
 const InfanteScreen = () => {
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const handleFormSubmit = async (data) => {
+        try {
+            // Aquí poner lógica de Firebase
+            // await firebase.firestore().collection('feedback').add(data);
+            console.log('Datos enviados:', data);
+        } catch (error) {
+            console.error('Error enviando a Firebase:', error);
+        }
+    }
+    
     return (
         <View style={styles.container}>
             <CaruselCircular datos={datos} />
+            <Pressable onPress={() => setModalVisible(true)}>
+                <Text>Abrir ModalForm</Text>
+            </Pressable>
             <FlatList
                 style={styles.containerSecundario}
                 contentContainerStyle={{ paddingVertical: 10 }}
@@ -46,6 +62,11 @@ const InfanteScreen = () => {
                     );
                 }}
                 ItemSeparatorComponent={() => <View style={{ height: 60 }} />}
+            />
+            <ModalFormulario
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                onSubmit={handleFormSubmit}
             />
         </View>
     )

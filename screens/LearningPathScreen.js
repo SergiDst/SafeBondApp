@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, Dimensions, FlatList } from 'react-native';
 import { Appbar, IconButton } from 'react-native-paper';
-import BtnMapa from '../components/btnMapa';
-import IndicadorLabel from '../components/IndicadorLabel';
-import ModalMapa from '../components/ModalMapa';
+import BtnMapa from '../components/componentesLearningPath/btnMapa';
+import IndicadorLabel from '../components/componentesLearningPath/IndicadorLabel';
+import ModalMapa from '../components/componentesLearningPath/ModalMapa';
 
 const { width } = Dimensions.get('window');
 

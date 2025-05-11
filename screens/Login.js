@@ -13,9 +13,9 @@ const Login = () => {
                     <Text style={[styles.textTitle, styles.safe]}>SafeB</Text><Text style={[styles.textTitle, styles.bond]}>ond</Text>
                 </View>
                 <View style={styles.containerLogin}>
-                    <FormProvider>
+                    
                         <Form></Form>
-                    </FormProvider>
+                   
                 </View>
                 <View style={styles.contPlant}>
                     <Image

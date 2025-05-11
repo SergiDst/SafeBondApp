@@ -6,6 +6,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
+import { FormProvider } from './context/ContextLogin'
 import LearningPathScreen from './screens/LearningPathScreen'
 import LeccionMapaScreen from './screens/LeccionMapaScreen';
 import InfanteScreen from './screens/InfanteScreen';
@@ -69,17 +72,21 @@ export default function App() {
 
   return (
     <GestureHandlerRootView>
-      <PaperProvider>
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName='Tabs' screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
-              <Stack.Screen name="Lecciones" component={LeccionMapaScreen}></Stack.Screen>
-            </Stack.Navigator>
-          </NavigationContainer>
-        </SafeAreaProvider>
-      </PaperProvider>
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <PaperProvider>
+          <SafeAreaProvider>
+            <FormProvider>
+              <NavigationContainer>
+                <Stack.Navigator initialRouteName='Tabs' screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="Login" component={Login} />
+                  <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
+                  <Stack.Screen name="Lecciones" component={LeccionMapaScreen}></Stack.Screen>
+                </Stack.Navigator>
+              </NavigationContainer>
+            </FormProvider>
+          </SafeAreaProvider>
+        </PaperProvider>
+      </ApplicationProvider>
     </GestureHandlerRootView>
   );
 }

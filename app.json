@@ -23,7 +23,12 @@
       "package": "com.anonymous.mapa"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "build": {
+        "babel": {
+          "include": ["@ui-kitten/components"]
+        }
+      }
     },
     "plugins": [
       "expo-router",
