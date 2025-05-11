@@ -82,6 +82,7 @@ export default function App() {
                   <Stack.Screen name="Login" component={Login} />
                   <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
                   <Stack.Screen name="Lecciones" component={LeccionMapaScreen}></Stack.Screen>
+                  <Stack.Screen name="ListaArticulos" component={ListaArticulos}></Stack.Screen>
                 </Stack.Navigator>
               </NavigationContainer>
             </FormProvider>

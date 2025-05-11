@@ -1,6 +1,5 @@
-import { Form } from '../components/Form'
+import { Form } from '../components/componentesLogin/Form'
 import { StyleSheet, View, Image, Text } from 'react-native'
-import { FormProvider } from '../context/ContextLogin'
 
 const Login = () => {
     return (

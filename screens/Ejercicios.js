@@ -5,7 +5,7 @@ import {
   MochiyPopOne_400Regular,
 } from '@expo-google-fonts/mochiy-pop-one';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ComponenteLista } from '../components/componenteLista';
+import { ComponenteLista } from '../components/componentesEjercicios/componenteLista';
 
 const data = [
   {

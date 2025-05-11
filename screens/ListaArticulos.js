@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Image, FlatList, Pressable, Modal, Alert } from 'react-native';
-import { ComponenteLista } from '../components/componenteLista';
+import { ComponenteLista } from '../components/componentesEjercicios/componenteLista';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 

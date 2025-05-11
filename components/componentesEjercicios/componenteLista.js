@@ -18,7 +18,7 @@ export const ComponenteLista = ({ item }) => {
     <View style={styles.contComponent}>
       <View style={styles.componentImage}>
         <Image
-          source={require('../assets/Imagen1.png')}
+          source={require('../../assets/Imagen1.png')}
           style={{
             width: '100%',
             height: '100%',

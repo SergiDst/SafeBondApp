@@ -6,6 +6,42 @@ import { useAuthContext } from '../../context/ContextLogin';
 const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
 
     const { comportamiento, setComportamiento, formData, setFormData, birthDate, setBirthDate } = useAuthContext();
+    const [estaActivo, setEstaActivo] = useState(true)
+    useEffect(() => {
+        switch (indexItem) {
+            case 0:
+                if (comportamiento !== '') {
+                    setEstaActivo(true)
+                } else {
+                    setEstaActivo(false)
+                }
+                break;
+            case 1:
+                if (formData.Edad !== '') {
+                    setEstaActivo(true)
+                } else {
+                    setEstaActivo(false)
+                }
+                break;
+            case 2:
+                if (formData.Estatura !== '') {
+                    setEstaActivo(true)
+                } else {
+                    setEstaActivo(false)
+                }
+                break;
+            case 3:
+                if (formData.Peso !== '') {
+                    setEstaActivo(true)
+                } else {
+                    setEstaActivo(false)
+                }
+                break;
+            default:
+                break;
+        }
+            
+        }, [indexItem]);
 
     const today = new Date();
     const maxDate = today;
@@ -30,7 +66,45 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         if (!birthDate) return;
         const edad = calculateAge(birthDate).toString();
         setFormData(prev => ({ ...prev, Edad: edad }));
+        setEstaActivo(true)
     };
+
+    const actualizarCampo = (campo, valor) => {
+        setFormData(prev => ({ ...prev, [campo]: valor }));
+    };
+
+    const actualizarDatosModal = () => {
+        switch (indexItem) {
+            case 0:
+                setComportamiento('')
+                actualizarCampo('Comportamiento', '');
+                setEstaActivo(false)
+                break;
+            case 1:
+                actualizarCampo('Edad', '');
+                setEstaActivo(false)
+                break;
+            case 2:
+                actualizarCampo('Estatura', '');
+                setEstaActivo(false)
+                break;
+            case 3:
+                actualizarCampo('Peso', '');
+                setEstaActivo(false)
+                break;
+            default:
+                break;
+        }
+    };
+
+    const handleSaveComportamiento = () => {
+        if (comportamiento.row == null) return; // nada seleccionado
+        const seleccion = comportamientoOptions[comportamiento.row];
+        // actualiza formData (añade campo "Comportamiento")
+        setFormData(prev => ({ ...prev, Comportamiento: seleccion }));
+        // activa el botón o cierra el modal
+        setEstaActivo(true);
+      };
 
     const comportamientoOptions = ['Alocado', 'Serio', 'Neutro'];
 
@@ -40,7 +114,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         case 0:
             content = (
                 <>
-                    {comportamiento == '' ?
+                    {formData.Comportamiento == '' ?
                         <>
                             <Text style={styles.titulo}>¿Como es tu hijo?</Text>
                             <View style={styles.columnsContainer}>
@@ -58,6 +132,12 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                                 <View style={styles.column}>
                                     <Text style={styles.subtitulo}>Poner img o svg</Text>
                                     <Text style={styles.textStyle}>img o svg{comportamientoOptions[comportamiento.row]}</Text>
+                                    <Pressable
+                                        style={[styles.button, styles.buttonOpen]}
+                                        onPress={handleSaveComportamiento}
+                                    >
+                                        <Text style={styles.buttonText}>Guardar selección</Text>
+                                    </Pressable>
                                 </View>
                             </View>
                         </> :
@@ -92,11 +172,9 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                                     max={maxDate}
                                 />
                             </View>
-                            <View style={styles.containerButton}>
-                                <Pressable style={styles.button} onPress={handleSaveAge}>
-                                    <Text category='button'>Guardar Edad</Text>
-                                </Pressable>
-                            </View>
+                            <Pressable style={styles.button} onPress={handleSaveAge}>
+                                <Text category='button'>Guardar Edad</Text>
+                            </Pressable>
                         </> :
                         <>
                             <Text style={styles.titulo}>Tu hijo tiene:</Text>
@@ -145,6 +223,11 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                         <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(false)}>
                             <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Cerrar</Text>
                         </Pressable>
+                        {estaActivo &&
+                            <Pressable style={[styles.button, styles.buttonOpen]} onPress={actualizarDatosModal}>
+                                <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Actualizar</Text>
+                            </Pressable>
+                        }
                     </View>
                 </View>
             </View>
