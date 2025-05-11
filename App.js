@@ -11,6 +11,7 @@ import InfanteScreen from './screens/InfanteScreen';
 import Articulos from './screens/Articulos'
 import Ejercicios from './screens/Ejercicios'
 import Login from './screens/Login'
+import { ListaArticulos } from './screens/ListaArticulos';
 
 export default function App() {
 
@@ -75,6 +76,7 @@ export default function App() {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
             <Stack.Screen name="Lecciones" component={LeccionMapaScreen}></Stack.Screen>
+            <Stack.Screen name="ListaArticulos" component={ListaArticulos}></Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>

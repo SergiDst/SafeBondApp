@@ -1,10 +1,27 @@
-import { Pressable, Text, View, StyleSheet, Image } from 'react-native';
+import { Pressable, Text, View, StyleSheet, Image, FlatList } from 'react-native';
 import React, { useState } from 'react';
 import {
   useFonts,
   MochiyPopOne_400Regular,
 } from '@expo-google-fonts/mochiy-pop-one';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { ComponenteLista } from '../components/componenteLista';
+
+const data = [
+  {
+    id: '1',
+    Titulo: 'Artículo 1',
+    tags: 'Salud',
+    Texto: 'Contenido del artículo 1...',
+  },
+  {
+    id: '2',
+    Titulo: 'Artículo 2',
+    tags: 'Crianza',
+    Texto: 'Contenido del artículo 2...',
+  },
+  // ...más artículos
+];
 
 const Ejercicios = () => {
   const [fontsLoaded] = useFonts({
@@ -16,7 +33,7 @@ const Ejercicios = () => {
 
   return (
     <View style={styles.container}>
-    {/* Imagen Prinicpal */}
+      {/* Imagen Prinicpal */}
       <View style={styles.contImage}>
         <Image
           source={require('../assets/Imagen1.png')}
@@ -68,41 +85,16 @@ const Ejercicios = () => {
           </View>
         </View>
       </View>
-{/* contenedor de componente de ejercicio */}
-      <View style={styles.contComponent}>
-        <View style={styles.componentImage}>
-          <Image
-            source={require('../assets/Imagen1.png')}
-            style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: 10,
-              borderWidth: 1,
-            }}
-          />
-        </View>
-        <View style={styles.componentText}>
-          <Text style={[styles.fuente, { fontSize: 12, marginBottom: 10 }]}>
-            Imitación y Espejo
-          </Text>
-          <Text style={[styles.fuente, { fontSize: 9, color: '#49454f' }]}>
-            Categoria • Conexion
-          </Text>
-          <Text style={[styles.fuente, { fontSize: 9, color: '#49454f' }]}>
-            En esta actividad es necesario...
-          </Text>
-        </View>
-        <View>
-          <Pressable onPress={() => setLiked(!liked)}>
-            <Icon name="heart" size={20} color={liked ? 'red' : 'gray'} />
-          </Pressable>
-        </View>
-      </View>
-
+      {/* contenedor de componente de ejercicio */}
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ComponenteLista item={item} />}
+      />
       {/* contenedor de boton ver mas*/}
       <View style={styles.contVerMas}>
         <Pressable style={styles.btnVerMas}>
-          <Text style={[styles.fuente, { fontSize: 12}]}>Ver Mas</Text>
+          <Text style={[styles.fuente, { fontSize: 12 }]}>Ver Mas</Text>
         </Pressable>
       </View>
     </View>
@@ -158,42 +150,21 @@ const styles = StyleSheet.create({
   fuente: {
     fontFamily: 'MochiyPopOne_400Regular',
   },
-
-  //estilos del componente de ejercicios
-  contComponent: {
-    width: '90%',
-    justifyContent: 'center',
-    marginTop: 10,
-    flexDirection: 'row',
-    marginHorizontal: 10,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderColor: '#cac4d0',
-  },
-  componentImage: {
-    width: 100,
-    height: 65,
-  },
-  componentText: {
-    marginLeft: 10,
-    width: '55%',
-  },
-
   //estilos del contenedor del boton ver mas
-  contVerMas:{
+  contVerMas: {
     width: '100%',
     height: 100,
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fef7ff'
   },
-  btnVerMas:{
+  btnVerMas: {
     width: '80%',
-    alignItems:'center',
-    justifyContent:'center',
-    borderWidth:1,
-    borderRadius:20,
-    height:40
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 20,
+    height: 40
   }
 });
 
