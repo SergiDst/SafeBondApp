@@ -6,16 +6,17 @@ import BtnMapa from '../components/componentesLearningPath/btnMapa';
 import IndicadorLabel from '../components/componentesLearningPath/IndicadorLabel';
 import ModalMapa from '../components/componentesLearningPath/ModalMapa';
 import { useGetActividades } from '../Service/Actividades';
+import { useAuthContext } from '../context/ContextLogin';
 
 const { width } = Dimensions.get('window');
 
 const datosIniciales = [
     { icono: 'book-open-variant', tipoModal: '1', tituloModal: 'Lectura ', idContenido: 'L1' },
     { icono: 'map', tipoModal: '1', tituloModal: 'Lecturas Recomendadas', idContenido: 'A1' },
-    { icono: 'key', tipoModal: '1', tituloModal: 'Quiz sobre conexion', idContenido: 'Q1' },
+    { icono: 'key', tipoModal: '2', tituloModal: 'Quiz sobre conexion', idContenido: 'Q1' },
     { icono: 'book-open-variant', tipoModal: '1', tituloModal: 'Accesos Rápidos', idContenido: 'L2' },
     { icono: 'map', tipoModal: '1', tituloModal: 'Favoritos', idContenido: 'A2' },
-    { icono: 'key', tipoModal: '1', tituloModal: 'Ejercicios', idContenido: 'Q2' },
+    { icono: 'key', tipoModal: '2', tituloModal: 'Ejercicios', idContenido: 'Q2' },
     { icono: 'book-open-variant', tipoModal: '1', tituloModal: 'Accesos Rápidos', idContenido: 'L3' },
     { icono: 'map', tipoModal: '1', tituloModal: 'Favoritos', idContenido: 'A3' },
     { icono: 'key', tipoModal: '1', tituloModal: 'Ejercicios', idContenido: 'Q3' },
@@ -24,6 +25,8 @@ const secuenciaEstilos = ['estilo2', 'estilo3', 'estilo2', 'estilo1'];
 const estilosEspeciales = [2, 5, 8] //Añadir el indice de los botones especiales
 
 const LearningPathScreen = () => {
+
+    const { userData } = useAuthContext();
 
     const actividadesData = useGetActividades();
     console.log('Actividades:', actividadesData);
@@ -35,15 +38,22 @@ const LearningPathScreen = () => {
     const [botones, setBotones] = useState([]);
     const [completados, setCompletados] = useState(0);
 
-    useEffect(() => {
-        // traer datos de la DB
-        setBotones(datosIniciales);
-    }, []);
+     useEffect(() => {
+        if (userData && userData.Lecciones) {
+            const datosActualizados = datosIniciales.map(item => {
+                const leccion = userData.Lecciones[item.idContenido];
+                return {
+                    ...item,
+                    completado: leccion?.completo === true
+                };
+            });
 
-    useEffect(() => {
-        const total = botones.filter(b => b.completado).length;
-        setCompletados(total);
-    }, [botones]);
+            setBotones(datosActualizados);
+
+            const cantidadCompletados = datosActualizados.filter(item => item.completado).length;
+            setCompletados(cantidadCompletados);
+        }
+    }, [userData]);
 
     const [enFinal, setEnFinal] = useState(false);
 
@@ -71,36 +81,36 @@ const LearningPathScreen = () => {
     };
 
     const abrirModal = (tipo, titulo, idContenido) => {
-    let actividad = null;
+        let actividad = null;
 
-    for (const item of actividadesData) {
-        for (const clave in item) {
-            const contenido = item[clave];
-            if (contenido?.ID === idContenido) {
-                actividad = contenido;
-                break;
+        for (const item of actividadesData) {
+            for (const clave in item) {
+                const contenido = item[clave];
+                if (contenido?.ID === idContenido) {
+                    actividad = contenido;
+                    break;
+                }
             }
+            if (actividad) break;
         }
-        if (actividad) break;
-    }
 
-    setTipoModal(tipo);
-    console.log('Actividad:', actividad);
-    setDataActividad(actividad);
-    console.log('DataActividad:', DataActividad);
-    if (actividad) {
-        setTituloModal(actividad.TituloModal || titulo);
-        setSubtitulo1(actividad.Sub1 || '');
-        setTexto1(actividad.Texto1 || '');
-        setTexto2(actividad.Texto2 || '');
-    } else {
-        setSubtitulo1('');
-        setTexto1('');
-        setTexto2('');
-    }
-    console.log('DataActividad:', DataActividad);
-    setModalVisible(true);
-};
+        setTipoModal(tipo);
+        console.log('Actividad:', actividad);
+        setDataActividad(actividad);
+        console.log('DataActividad:', DataActividad);
+        if (actividad) {
+            setTituloModal(actividad.TituloModal || titulo);
+            setSubtitulo1(actividad.Sub1 || '');
+            setTexto1(actividad.Texto1 || '');
+            setTexto2(actividad.Texto2 || '');
+        } else {
+            setSubtitulo1('');
+            setTexto1('');
+            setTexto2('');
+        }
+        console.log('DataActividad:', DataActividad);
+        setModalVisible(true);
+    };
 
 
     return (
