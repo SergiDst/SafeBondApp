@@ -5,55 +5,29 @@ import { Appbar, IconButton } from 'react-native-paper';
 import BtnMapa from '../components/componentesLearningPath/btnMapa';
 import IndicadorLabel from '../components/componentesLearningPath/IndicadorLabel';
 import ModalMapa from '../components/componentesLearningPath/ModalMapa';
+import { useGetActividades } from '../Service/Actividades';
 
 const { width } = Dimensions.get('window');
 
 const datosIniciales = [
-    { icono: 'map', tipoModal: '1', tituloModal: 'Mapa de Ubicación', idContenido: 'ubicacion' },
-    { icono: 'book-open-variant', tipoModal: '1', tituloModal: 'Lecturas Recomendadas', idContenido: 'lecturas', completado: true },
-    { icono: 'dumbbell', tipoModal: '1', tituloModal: 'Entrenamiento Diario', idContenido: 'entrenamiento', completado: true },
-    { icono: 'key', tipoModal: '2', tituloModal: 'Accesos Rápidos', idContenido: 'accesos', completado: true },
-    { icono: 'star-circle', tipoModal: '3', tituloModal: 'Favoritos', idContenido: 'favoritos', completado: true },
-    { icono: 'dumbbell', tipoModal: '2', tituloModal: 'Ejercicios', idContenido: 'ejercicios', completado: true },
+    { icono: 'book-open-variant', tipoModal: '1', tituloModal: 'Lectura ', idContenido: 'L1' },
+    { icono: 'map', tipoModal: '1', tituloModal: 'Lecturas Recomendadas', idContenido: 'A1' },
+    { icono: 'key', tipoModal: '1', tituloModal: 'Quiz sobre conexion', idContenido: 'Q1' },
+    { icono: 'book-open-variant', tipoModal: '1', tituloModal: 'Accesos Rápidos', idContenido: 'L2' },
+    { icono: 'map', tipoModal: '1', tituloModal: 'Favoritos', idContenido: 'A2' },
+    { icono: 'key', tipoModal: '1', tituloModal: 'Ejercicios', idContenido: 'Q2' },
+    { icono: 'book-open-variant', tipoModal: '1', tituloModal: 'Accesos Rápidos', idContenido: 'L3' },
+    { icono: 'map', tipoModal: '1', tituloModal: 'Favoritos', idContenido: 'A3' },
+    { icono: 'key', tipoModal: '1', tituloModal: 'Ejercicios', idContenido: 'Q3' },
 ];
-
-const contenidosModal = {
-    ubicacion: {
-        subtitulo1: 'Materiales',
-        texto1: '1.Palo \n2.Papel \n3.Tijeras',
-        texto2: '60min.',
-    },
-    lecturas: {
-        subtitulo1: 'Lecturas sugeridas',
-        texto1: 'Explora temas recomendados.',
-        texto2: 'Contenido actualizado semanalmente.',
-    },
-    entrenamiento: {
-        subtitulo1: 'Plan diario',
-        texto1: 'Sigue la rutina recomendada.',
-        texto2: 'Recuerda calentar antes de comenzar.',
-    },
-    accesos: {
-        subtitulo1: 'Atajos útiles',
-        texto1: 'Navega más rápido.',
-        texto2: 'Accede a lo importante con un solo clic.',
-    },
-    favoritos: {
-        subtitulo1: 'Tus favoritos',
-        texto1: 'Guarda lo que más te gusta.',
-        texto2: 'Accede rápido a tus elementos preferidos.',
-    },
-    ejercicios: {
-        subtitulo1: 'Sesión activa',
-        texto1: 'Rutina adaptada a tu nivel.',
-        texto2: 'Incluye descanso y estiramiento.',
-    },
-};
-
-const secuenciaEstilos = ['estilo1', 'estilo2', 'estilo3', 'estilo2'];
-const estilosEspeciales = [4, 7] //Añadir el indice de los botones especiales
+const secuenciaEstilos = ['estilo2', 'estilo3', 'estilo2', 'estilo1'];
+const estilosEspeciales = [2, 5, 8] //Añadir el indice de los botones especiales
 
 const LearningPathScreen = () => {
+
+    const actividadesData = useGetActividades();
+    console.log('Actividades:', actividadesData);
+
     const navigation = useNavigation();
 
     const flatListRef = useRef(null);
@@ -80,6 +54,7 @@ const LearningPathScreen = () => {
     //const [subtitulo2, setSubtitulo2] = useState('');
     const [texto1, setTexto1] = useState('');
     const [texto2, setTexto2] = useState('');
+    const [DataActividad, setDataActividad] = useState('');
 
     const handleScroll = (event) => {
         const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
@@ -96,15 +71,38 @@ const LearningPathScreen = () => {
     };
 
     const abrirModal = (tipo, titulo, idContenido) => {
-        const contenido = contenidosModal[idContenido];
-        setTipoModal(tipo);
-        setTituloModal(titulo);
-        setSubtitulo1(contenido?.subtitulo1 || '');
-        setTexto1(contenido?.texto1 || '');
-        setTexto2(contenido?.texto2 || '');
-        setModalVisible(true);
-    };
-    
+    let actividad = null;
+
+    for (const item of actividadesData) {
+        for (const clave in item) {
+            const contenido = item[clave];
+            if (contenido?.ID === idContenido) {
+                actividad = contenido;
+                break;
+            }
+        }
+        if (actividad) break;
+    }
+
+    setTipoModal(tipo);
+    console.log('Actividad:', actividad);
+    setDataActividad(actividad);
+    console.log('DataActividad:', DataActividad);
+    if (actividad) {
+        setTituloModal(actividad.TituloModal || titulo);
+        setSubtitulo1(actividad.Sub1 || '');
+        setTexto1(actividad.Texto1 || '');
+        setTexto2(actividad.Texto2 || '');
+    } else {
+        setSubtitulo1('');
+        setTexto1('');
+        setTexto2('');
+    }
+    console.log('DataActividad:', DataActividad);
+    setModalVisible(true);
+};
+
+
     return (
         <View style={styles.container}>
             <Appbar.Header mode="center-aligned" style={styles.appbar}>
@@ -133,6 +131,7 @@ const LearningPathScreen = () => {
                             nombreEstilo={nombreEstilo}
                             accion={() => abrirModal(item.tipoModal, item.tituloModal, item.idContenido)}
                             completado={item.completado}
+                            datosActividad={actividadesData?.find(a => a.idContenido === item.idContenido)}
                         />
                     );
                 }}
@@ -162,6 +161,7 @@ const LearningPathScreen = () => {
                 setTexto1={setTexto1}
                 texto2={texto2}
                 setTexto2={setTexto2}
+                DataActividad={DataActividad}
             />
         </View>
     )
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+        marginBottom: 10,
     },
     appbar: {
         justifyContent: 'space-between',
