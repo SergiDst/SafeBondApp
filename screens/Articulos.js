@@ -8,6 +8,7 @@ import { useGetArticulos } from '../Service/Articulos';
 import { useGetConsejos } from '../Service/Consejos';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import { useAuthContext } from '../context/ContextLogin';
 
 
 const screenWidth = Dimensions.get('window').width;
@@ -21,6 +22,11 @@ const iconosPorCategoria = {
 
 
 const Articulos = () => {
+
+  const { userData } = useAuthContext();
+  
+  console.log('user', userData)
+
   const [fontsLoaded] = useFonts({
     MochiyPopOne_400Regular,
   });

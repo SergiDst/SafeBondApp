@@ -33,7 +33,7 @@ export const ListaArticulos = (Articulos) => {
 
             {/* Header */}
             <View style={styles.head}>
-                <Pressable onPress={() => navigation.navigate('Tabs')}
+                <Pressable onPress={() => navigation.navigate('TabNavigator')}
                     style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Icon
                         name="chevron-left"

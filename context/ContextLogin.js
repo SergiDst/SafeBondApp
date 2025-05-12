@@ -15,6 +15,7 @@ export const FormProvider = ({ children }) => {
             feedback: ''
     });
     const [birthDate, setBirthDate] = useState(null);
+    const [userData, setUserData] = useState(null);
 
     const toggleAuthMode = () => {
         setIsLoggingIn((prev) => !prev); // Cambiar entre login y registro
@@ -31,6 +32,8 @@ export const FormProvider = ({ children }) => {
                 setFormData,
                 birthDate,
                 setBirthDate
+                ,userData,
+                setUserData
             }}
         >
             {children}

@@ -10,6 +10,7 @@ import Comportamiento from '../assets/Comportamiento.svg'
 import Edad from '../assets/Edad.svg'
 import Estatura from '../assets/Estatura.svg'
 import Peso from '../assets/Peso.svg'
+import { useGetFormulario } from '../Service/Formulario';
 
 const { width, height } = Dimensions.get('window');
 
@@ -30,6 +31,9 @@ const datos = [
 const InfanteScreen = () => {
     const [modalVisible, setModalVisible] = useState(false);
 
+    const dataPreguntas = useGetFormulario();
+
+    console.log('dataPreguntas', dataPreguntas)
     const handleFormSubmit = async (data) => {
         try {
             // Aquí poner lógica de Firebase
