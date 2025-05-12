@@ -1,70 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
-import { ViewPager, Divider, Input, Button, Select, SelectItem, Radio, RadioGroup, Datepicker } from '@ui-kitten/components';
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
+import { ViewPager, Divider, Input, Button, Select, SelectItem, Radio, RadioGroup, Datepicker, Layout } from '@ui-kitten/components';
+import { Modal, Portal } from 'react-native-paper';
 import { useAuthContext } from '../../context/ContextLogin';
+import FormularioInfante from './FormularioInfante';
+import PreguntasInfante from './PreguntasInfante';
 
 const { width, height } = Dimensions.get('window');
+const MODAL_WIDTH = width * 0.9;
+const MODAL_HEIGHT = height * 0.8;
 
 const ModalFormulario = ({ visible, onClose, onSubmit }) => {
-    const { comportamiento, setComportamiento, formData, setFormData, birthDate, setBirthDate } = useAuthContext();
+    const { formData, setFormData} = useAuthContext();
 
-    const [opcion, setOpcion] = useState(0)
     const [selectedIndex, setSelectedIndex] = useState(0);
-
-    const comportamientoOptions = ['Alocado', 'Serio', 'Neutro'];
-    const [touched, setTouched] = useState({});
 
     // Lazy loading
     const shouldLoadComponent = (index) => index === selectedIndex;
 
-    const today = new Date();
-    const eighteenYearsAgo = new Date(
-        today.getFullYear() - 18,
-        today.getMonth(),
-        today.getDate()
-    );
-
-    const calculateAge = (birthDate) => {
-        const now = new Date();
-        let age = now.getFullYear() - birthDate.getFullYear();
-        const monthDiff = now.getMonth() - birthDate.getMonth();
-        const dayDiff = now.getDate() - birthDate.getDate();
-
-        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-            age--;
-        }
-        return age;
-    };
-
-    const handlePesoChange = (text) => {
-        const filtered = text.replace(/[^0-9.]/g, '');
-        const validText = filtered.split('.').length > 2
-            ? filtered.substring(0, filtered.lastIndexOf('.'))
-            : filtered;
-
-        const number = parseFloat(validText);
-        if (!isNaN(number) && number >= 2 && number <= 100) {
-            setFormData({ ...formData, Peso: validText });
-        } else if (validText === '') {
-            setFormData({ ...formData, Peso: '' });
-        }
-    };
-
-    const handleEstaturaChange = (text) => {
-        const filtered = text.replace(/[^0-9.]/g, '');
-        const validText = filtered.split('.').length > 2
-            ? filtered.substring(0, filtered.lastIndexOf('.'))
-            : filtered;
-
-        const number = parseFloat(validText);
-        if (!isNaN(number) && number >= 0.5 && number <= 2.5) {
-            setFormData({ ...formData, Estatura: validText });
-        } else if (validText === '') {
-            setFormData({ ...formData, Estatura: '' });
-        }
-    };
-
-    const pages = [
+    /* const pages = [
         {
             key: 'personal',
             title: 'Datos del infante',
@@ -115,6 +69,7 @@ const ModalFormulario = ({ visible, onClose, onSubmit }) => {
                         caption={touched.Estatura && !formData.Estatura ? 'Requerido' : ''}
                     />
                     <Select
+                        style={{ paddingTop: 50 }}
                         label="Comportamiento"
                         status={touched.Comportamiento && !formData.Comportamiento ? 'danger' : 'basic'}
                         caption={touched.Comportamiento && !formData.Comportamiento ? 'Requerido' : ''}
@@ -131,11 +86,11 @@ const ModalFormulario = ({ visible, onClose, onSubmit }) => {
                     </Select>
                 </>
             ),
-            valid: () =>
-                formData.Edad?.trim() !== '' &&
-                formData.Peso?.trim() !== '' &&
-                formData.Estatura?.trim() !== '' &&
-                formData.Comportamiento?.trim() !== ''
+             valid: () =>
+                 formData.Edad?.trim() !== '' &&
+                 formData.Peso?.trim() !== '' &&
+                 formData.Estatura?.trim() !== '' &&
+                 formData.Comportamiento?.trim() !== ''
         },
         {
             key: 'feedback',
@@ -174,8 +129,8 @@ const ModalFormulario = ({ visible, onClose, onSubmit }) => {
             valid: () => formData.feedback?.trim() !== ''
         }
     ];
-
-    const canProceed = pages[selectedIndex].valid();
+ */
+    /* const canProceed = pages[selectedIndex].valid(); */
 
     const handleNext = () => {
         setTouched({});
@@ -187,7 +142,7 @@ const ModalFormulario = ({ visible, onClose, onSubmit }) => {
         setSelectedIndex(i => Math.max(i - 1, 0));
     };
 
-    const handleSend = () => {
+    /* const handleSend = () => {
         const allValid = pages.every(p => p.valid());
         if (allValid) {
             onSubmit(formData);
@@ -197,71 +152,73 @@ const ModalFormulario = ({ visible, onClose, onSubmit }) => {
         } else {
             setTouched({ name: true, email: true, feedback: true });
         }
-    };
+    }; */
 
     return (
-        <Modal
-            visible={visible}
-            transparent
-            animationType="slide"
-            onRequestClose={onClose}
-        >
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : null}
-                style={styles.overlay}
-            >
-                <View style={styles.container}>
-                    <Text style={styles.title}>{pages[selectedIndex].title}</Text>
-                    <Divider />
+        <Portal>
+            <Modal
+                visible={visible}
+                onDismiss={onClose}>
+                <View style={styles.content}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.title}>Hola</Text>
+                        <Divider />
 
-                    <ViewPager
-                        style={styles.pager}
-                        selectedIndex={selectedIndex}
-                        shouldLoadComponent={shouldLoadComponent}
-                        onSelect={index => setSelectedIndex(index)}
-                    >
-                        {pages.map(page => (
-                            <View key={page.key} style={styles.page}>
-                                {page.content}
+                        <ViewPager
+                            style={styles.pager}
+                            selectedIndex={selectedIndex}
+                            shouldLoadComponent={shouldLoadComponent}
+                            onSelect={index => setSelectedIndex(index)}
+                        >
+                            <View style={styles.page}>
+                                <FormularioInfante />
                             </View>
-                        ))}
-                    </ViewPager>
+                            <View style={styles.page}>
+                                <PreguntasInfante/>
+                            </View>
+                        </ViewPager>
 
-                    <View style={styles.nav}>
-                        {selectedIndex > 0 && (
-                            <Button appearance="outline" onPress={handleBack} style={styles.button}>
-                                Anterior
-                            </Button>
-                        )}
+                        {/* <View style={styles.nav}>
+                    {selectedIndex > 0 && (
+                        <Button appearance="outline" onPress={handleBack} style={styles.button}>
+                            Anterior
+                        </Button>
+                    )}
 
-                        {selectedIndex < pages.length - 1 ? (
-                            <Button onPress={handleNext} style={styles.button}>
-                                Siguiente
-                            </Button>
-                        ) : (
-                            <Button status="success" disabled={!canProceed} onPress={handleSend} style={styles.button}>
-                                Enviar
-                            </Button>
-                        )}
+                    {selectedIndex < pages.length - 1 ? (
+                        <Button onPress={handleNext} style={styles.button}>
+                            Siguiente
+                        </Button>
+                    ) : (
+                        <Button status="success" disabled={!canProceed} onPress={handleSend} style={styles.button}>
+                            Enviar
+                        </Button>
+                    )}
+                </View> */}
                     </View>
                 </View>
-            </KeyboardAvoidingView>
-        </Modal>
+
+            </Modal>
+        </Portal>
     );
 };
 
 const styles = StyleSheet.create({
-    overlay: {
+    modalView: {
+        width: MODAL_WIDTH,
+        height: MODAL_HEIGHT,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        elevation: 5,
+    },
+    backdrop: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    content: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    container: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 8,
-        padding: 20,
-        elevation: 5,
+        alignItems: 'center',
     },
     title: {
         fontSize: 18,
@@ -271,6 +228,7 @@ const styles = StyleSheet.create({
     pager: {
         height: height / 2,
         marginVertical: 10,
+        backgroundColor: 'red'
     },
     page: {
         flex: 1,
