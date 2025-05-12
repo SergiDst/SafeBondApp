@@ -1,8 +1,10 @@
 import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuthContext } from '../../context/ContextLogin';
+import { set, ref, getDatabase } from 'firebase/database';
 import React, { useState } from 'react';
 import { Text, TextInput, Pressable, View, Alert } from 'react-native';
 import { styles } from './LoginComponent';
+import { userDataTemplate } from '../../datosIniciales/datosRegistro';
 
 export const RegisterComponent = () => {
 
@@ -87,19 +89,27 @@ export const RegisterComponent = () => {
 
         const auth = getAuth();
 
+        const db = getDatabase();
+
         createUserWithEmailAndPassword(auth, dataRegister.email, dataRegister.password)
             .then((userCredential) => {
-                // Signed up 
                 const user = userCredential.user;
+                const uid = user.uid;
 
-                // Actualizar el perfil del usuario con el nombre
                 return updateProfile(user, {
                     displayName: dataRegister.name
                 }).then(() => {
-                    console.log(
-                        'Registro Exitoso',
-                        '¡Tu cuenta ha sido creada correctamente!',                       
-                    )
+                    // Clonar el template y actualizar campos dinámicos
+                    const userData = {
+                        ...userDataTemplate,
+                        InfoUser: {
+                            Email: dataRegister.email,
+                            Nombre: dataRegister.name
+                        }
+                    };
+
+                    return set(ref(db, `TBRI/Usuarios/${uid}`), userData);
+                }).then(() => {
                     Alert.alert(
                         'Registro Exitoso',
                         '¡Tu cuenta ha sido creada correctamente!',
