@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Dimensions, FlatList, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useAuthContext } from '../context/ContextLogin';
 import ModalFormulario from '../components/componentesInfantes/ModalFormulario';
 import CaruselCircular from '../components/componentesInfantes/CaruselCircular';
 import StatsBar from '../components/componentesInfantes/StatsBar';
@@ -28,7 +30,15 @@ const datos = [
 
 
 const InfanteScreen = () => {
+    const { valorStats } = useAuthContext();
+    const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
+
+    const estadisticas = [
+        { icono: Emocion, progreso: valorStats.RegulacionEmociones, nombreEstadistica: 'Regulacion de Emociones' },
+        { icono: Seguimiento, progreso: valorStats.SeguimientoInstrucciones, nombreEstadistica: 'Segumiento de Instrucciones' },
+        { icono: Vinculo, progreso: valorStats.VinculoPadre, nombreEstadistica: 'Vinculo con el Padre' },
+    ];
 
     const handleFormSubmit = async (data) => {
         try {
@@ -43,8 +53,8 @@ const InfanteScreen = () => {
     return (
         <View style={styles.container}>
             <CaruselCircular datos={datos} />
-            <Pressable onPress={() => setModalVisible(true)}>
-                <Text>Abrir ModalForm</Text>
+            <Pressable onPress={() => navigation.navigate("FormInfante")}>
+                <Text>Abrir Form</Text>
             </Pressable>
             <FlatList
                 style={styles.containerSecundario}

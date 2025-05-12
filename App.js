@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, Layout, Text } from '@ui-kitten/components';
+import { ApplicationProvider } from '@ui-kitten/components';
 import { FormProvider } from './context/ContextLogin'
 import LearningPathScreen from './screens/LearningPathScreen'
 import LeccionMapaScreen from './screens/LeccionMapaScreen';
@@ -15,6 +15,7 @@ import InfanteScreen from './screens/InfanteScreen';
 import Articulos from './screens/Articulos'
 import Ejercicios from './screens/Ejercicios'
 import Login from './screens/Login'
+import FormularioInfanteScreen from './screens/FormularioInfanteScreen';
 import { ListaArticulos } from './screens/ListaArticulos';
 
 export default function App() {
@@ -73,22 +74,23 @@ export default function App() {
 
   return (
     <GestureHandlerRootView>
-      <ApplicationProvider {...eva} theme={eva.light}>
-        <PaperProvider>
-          <SafeAreaProvider>
-            <FormProvider>
+      <FormProvider>
+        <ApplicationProvider {...eva} theme={eva.light}>
+          <PaperProvider>
+            <SafeAreaProvider>
               <NavigationContainer>
                 <Stack.Navigator initialRouteName='Tabs' screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="Login" component={Login} />
                   <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
                   <Stack.Screen name="Lecciones" component={LeccionMapaScreen}></Stack.Screen>
                   <Stack.Screen name="ListaArticulos" component={ListaArticulos}></Stack.Screen>
+                  <Stack.Screen name="FormInfante" component={FormularioInfanteScreen}></Stack.Screen>
                 </Stack.Navigator>
               </NavigationContainer>
-            </FormProvider>
-          </SafeAreaProvider>
-        </PaperProvider>
-      </ApplicationProvider>
+            </SafeAreaProvider>
+          </PaperProvider>
+        </ApplicationProvider>
+      </FormProvider>
     </GestureHandlerRootView>
   );
 }
