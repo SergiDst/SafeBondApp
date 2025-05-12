@@ -79,9 +79,9 @@ export default function App() {
           <PaperProvider>
             <SafeAreaProvider>
               <NavigationContainer>
-                <Stack.Navigator initialRouteName='Tabs' screenOptions={{ headerShown: false }}>
+                <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="Login" component={Login} />
-                  <Stack.Screen name="Tabs" component={TabNavigator}></Stack.Screen>
+                  <Stack.Screen name="TabNavigator" component={TabNavigator}></Stack.Screen>
                   <Stack.Screen name="Lecciones" component={LeccionMapaScreen}></Stack.Screen>
                   <Stack.Screen name="ListaArticulos" component={ListaArticulos}></Stack.Screen>
                   <Stack.Screen name="FormInfante" component={FormularioInfanteScreen}></Stack.Screen>

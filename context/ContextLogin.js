@@ -21,6 +21,7 @@ export const FormProvider = ({ children }) => {
     const [comportamiento, setComportamiento] = useState('')
     const comportamientoOptions = ['Alocado', 'Serio', 'Desinteresado'];
     const [birthDate, setBirthDate] = useState(null);
+    const [userData, setUserData] = useState(null);
     const [pesoSelect, setPesoSelect] = useState('');
     const [estaturaSelect, setEstaturaSelect] = useState('');
 
@@ -45,12 +46,14 @@ export const FormProvider = ({ children }) => {
                 setFormData,
                 birthDate,
                 setBirthDate,
-                pesoOptions,
                 pesoSelect,
                 setPesoSelect,
+                pesoOptions,
                 estaturaOptions,
                 estaturaSelect,
                 setEstaturaSelect,
+                userData,
+                setUserData,
                 valorStats,
                 setValorStats
             }}

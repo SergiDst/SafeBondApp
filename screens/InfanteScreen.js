@@ -15,11 +15,11 @@ import Peso from '../assets/Peso.svg'
 
 const { width, height } = Dimensions.get('window');
 
-const estadisticas = [
+/* const estadisticas = [
     { icono: Emocion, progreso: 1, nombreEstadistica: 'Regulacion de Emociones'},
     { icono: Seguimiento, progreso: 0.9, nombreEstadistica: 'Segumiento de Instrucciones'},
     { icono: Vinculo, progreso: 0.2, nombreEstadistica: 'Vinculo con el Padre'},
-];
+]; */
 
 const datos = [
     { icono: Comportamiento, nombreIcono: 'Comportamiento' },

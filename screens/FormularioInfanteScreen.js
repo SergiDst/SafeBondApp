@@ -6,8 +6,9 @@ import FormularioInfante from '../components/componentesInfantes/FormularioInfan
 import PreguntasInfante from '../components/componentesInfantes/PreguntasInfante';
 import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../context/ContextLogin';
+import { useGetFormulario } from '../Service/Formulario';
 
-const dbData = {
+/* const prueba = {
     InstruccionesIniciales: {
         escala: "1 = Casi nunca,2 = Rara vez,3 = A veces,4 = Frecuentemente,5 = Casi siempre",
         instrucciones: "Por favor conteste cada pregunta …",
@@ -29,28 +30,31 @@ const dbData = {
         Pregunta3: { Pregunta: "¿Con qué frecuencia comparte sus sentimientos…?", id: 3 }
     }
 };
-
-const questionItems = Object.entries(dbData)
-    .filter(([sectionKey]) => sectionKey !== 'InstruccionesIniciales') // omitimos solo al renderizar
-    .flatMap(([sectionKey, sectionValue]) =>
-        Object.values(sectionValue).map(({ id, Pregunta }) => ({
-            type: 'question',
-            key: `${sectionKey}-${id}`,
-            sectionKey,
-            id,
-            pregunta: Pregunta,
-        }))
-    );
-
-const carouselData = [
-    { type: 'form', key: 'form-page' },
-    ...questionItems,
-];
+ */
 
 const { width, height } = Dimensions.get('window');
 
-
 const FormularioInfanteScreen = () => {
+    const dbData = useGetFormulario();
+
+    console.log('dataPreguntas', dataPreguntas)
+
+    const questionItems = Object.entries(dbData)
+        .filter(([sectionKey]) => sectionKey !== 'InstruccionesIniciales') // omitimos solo al renderizar
+        .flatMap(([sectionKey, sectionValue]) =>
+            Object.values(sectionValue).map(({ id, Pregunta }) => ({
+                type: 'question',
+                key: `${sectionKey}-${id}`,
+                sectionKey,
+                id,
+                pregunta: Pregunta,
+            }))
+        );
+
+    const carouselData = [
+        { type: 'form', key: 'form-page' },
+        ...questionItems,
+    ];
 
     const { valorStats, setValorStats } = useAuthContext();
     const [selectedIndex, setSelectedIndex] = useState(0);

@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, Pressable, Modal, ActivityIndicator, Ani
 
 const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
     tituloModal, setTituloModal, subtitulo1, setSubtitulo1,
-    texto1, setTexto1, texto2, setTexto2 }) => {
+    texto1, setTexto1, texto2, setTexto2, DataActividad }) => {
     
     const navigation = useNavigation();
 
@@ -19,19 +19,20 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
     }, [modalVisible]);
 
     let content;
-
+    const data = DataActividad;
+    console.log('tipoModal:', DataActividad);
     switch (tipoModal) {
         case '1':
             content = (
                 <>
                     <View style={styles.columnsContainer}>
                         <View style={styles.column}>
-                            <Text style={styles.subtitulo}>{subtitulo1}</Text>
-                            <Text style={styles.textStyle}>{texto1}</Text>
+                            <Text style={styles.subtitulo} numberOfLines={2}>{subtitulo1}</Text>
+                            <Text style={styles.textStyle} numberOfLines={2}>{texto1}</Text>
                         </View>
                         <View style={styles.column}>
                             <Text style={styles.subtitulo}>Tiempo</Text>
-                            <Text style={styles.textStyle}>{texto2}</Text>
+                            <Text style={styles.textStyle} numberOfLines={2}>{texto2}</Text>
                         </View>
                     </View>
                 </>
@@ -76,7 +77,9 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
                         </Pressable>
                         <Pressable style={[styles.button, styles.buttonOpen]} onPress={() => {
                             setModalVisible(false)
-                            navigation.navigate("Lecciones")
+                            navigation.navigate("Lecciones", {
+                                data: DataActividad,
+                            })
                         }}>
                             <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Completar</Text>
                         </Pressable>

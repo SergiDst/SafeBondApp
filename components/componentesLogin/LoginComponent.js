@@ -4,47 +4,66 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWith
 import React from 'react'
 import { useAuthContext } from '../../context/ContextLogin'
 import { useNavigation } from '@react-navigation/native'
+import {GetUserById} from '../../Service/Usario'
+
 
 export const LoginComponent = () => {
 
   const navigation = useNavigation()
-
-  const { toggleAuthMode } = useAuthContext()
+  const [isChargging, setIsCharging] = useState(false)
+  const { toggleAuthMode, setUserData } = useAuthContext()
 
   const [data, setData] = useState({
     userName: '',
     password: ''
   })
 
-  const logear = () => {
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, data.userName, data.password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log('entro')
-        navigation.replace('TabNavigator')
-      })
-      .catch((error) => {
-        // Traducción de errores comunes de Firebase para una mejor UX
-        let errorMessage;
-        switch (error.code) {
-          case 'auth/user-not-found':
-            errorMessage = 'No existe ninguna cuenta con este correo electrónico';
-            break;
-          case 'auth/wrong-password':
-            errorMessage = 'Contraseña incorrecta';
-            break;
-          case 'auth/too-many-requests':
-            errorMessage = 'Demasiados intentos fallidos. Inténtalo más tarde';
-            break;
-          default:
-            errorMessage = error.message;
-        }
-        Alert.alert('Error', errorMessage);
-      });
+  const logear = async () => {
+  setIsCharging(true)
+  const auth = getAuth();
+  try {
+    const userCredentials = await signInWithEmailAndPassword(auth, data.userName, data.password);
+    const user = userCredentials.user;
+    console.log('entro', user.uid);
+
+    // Obtener los datos del usuario usando el UID
+    const userData = await GetUserById(user.uid);
+
+      if (userData) {
+        setUserData(userData);
+        console.log('userData obtenido:', userData); // Aquí deberías ver los datos correctamente
+      } else {
+        console.log('No se encontraron datos para este usuario');
+      }
+
+      setIsCharging(false);
+      navigation.replace('TabNavigator');
+  } catch (error) {
+    setIsCharging(false)
+    let errorMessage;
+    switch (error.code) {
+      case 'auth/user-not-found':
+        errorMessage = 'No existe ninguna cuenta con este correo electrónico';
+        break;
+      case 'auth/wrong-password':
+        errorMessage = 'Contraseña incorrecta';
+        break;
+      case 'auth/too-many-requests':
+        errorMessage = 'Demasiados intentos fallidos. Inténtalo más tarde';
+        break;
+      default:
+        errorMessage = error.message;
+    }
+    setIsCharging(false)
+    Alert.alert('Error', errorMessage);
   }
+  setIsCharging(false)
+}
+
   return (
     <>
+    {isChargging ? (<Text>Cargando...</Text>) : (
+      <>
       <Text style={styles.titleInput}>Username</Text>
       <TextInput placeholder="example@tbri.com" style={styles.input}
         value={data.userName} onChangeText={(text) => {
@@ -67,6 +86,8 @@ export const LoginComponent = () => {
         <Pressable style={[styles.btn, styles.btnRegister]} onPress={() => toggleAuthMode()}><Text style={styles.textbtn}>Register</Text></Pressable>
       </View>
     </>
+    )}
+      </>
   )
 }
 
