@@ -7,16 +7,19 @@ const FormContext = createContext();
 export const FormProvider = ({ children }) => {
     const [isLoggingIn, setIsLoggingIn] = useState(false); // Estado para saber si está en login o registro
     const [formData, setFormData] = useState({
-            Edad: '',
-            Peso: '',
-            Estatura: '',
-            Comportamiento: '',
-            feedback: ''
+        Nombre:'',
+        Edad: '',
+        Peso: '',
+        Estatura: '',
+        Comportamiento: '',
+        RegulacionEmociones: '',
+        SeguimientoInstrucciones: '',
+        VinculoPadre: ''
     });
     const [valorStats, setValorStats] = useState({
         RegulacionEmociones: '',
         SeguimientoInstrucciones: '',
-        VinculoPadre:  ''
+        VinculoPadre: ''
     });
     const [comportamiento, setComportamiento] = useState('')
     const comportamientoOptions = ['Alocado', 'Serio', 'Desinteresado'];
@@ -24,11 +27,12 @@ export const FormProvider = ({ children }) => {
     const [userData, setUserData] = useState(null);
     const [pesoSelect, setPesoSelect] = useState('');
     const [estaturaSelect, setEstaturaSelect] = useState('');
+    const [nombreSelect, setNombreSelect] = useState('');
 
     // Opciones de rango
     const pesoOptions = ['2 - 20 kg', '21 - 50 kg', '51 - 100 kg'];
     const estaturaOptions = ['0.5 - 1.0 m', '1.1 - 1.8 m', '1.9 - 2.5 m'];
-    
+
 
     const toggleAuthMode = () => {
         setIsLoggingIn((prev) => !prev); // Cambiar entre login y registro
@@ -52,6 +56,8 @@ export const FormProvider = ({ children }) => {
                 estaturaOptions,
                 estaturaSelect,
                 setEstaturaSelect,
+                nombreSelect,
+                setNombreSelect,
                 userData,
                 setUserData,
                 valorStats,

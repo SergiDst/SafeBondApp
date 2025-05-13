@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Dimensions, FlatList, Pressable } from 'react-native';
-import { Modal, ViewPager, Divider, Input, Button, Select, SelectItem, Radio, RadioGroup, Datepicker, Layout } from '@ui-kitten/components';
+import React, { useState } from 'react';
+import { StyleSheet, Dimensions } from 'react-native';
+import { Input, Select, SelectItem, Datepicker } from '@ui-kitten/components';
 import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useAuthContext } from '../../context/ContextLogin';
 
 const { width, height } = Dimensions.get('window');
 
 const FormularioInfante = ({ animatedValue }) => {
+    
     const animatedStyle = useAnimatedStyle(() => {
         const opacity = interpolate(
             animatedValue.value,
@@ -22,7 +23,8 @@ const FormularioInfante = ({ animatedValue }) => {
 
     const { comportamiento, setComportamiento, comportamientoOptions,
         formData, setFormData, birthDate, setBirthDate,
-        pesoOptions, pesoSelect, setPesoSelect, estaturaOptions, estaturaSelect, setEstaturaSelect
+        pesoOptions, pesoSelect, setPesoSelect, estaturaOptions, estaturaSelect, setEstaturaSelect,
+        nombreSelect, setNombreSelect
     } = useAuthContext();
 
     const today = new Date();
@@ -46,6 +48,15 @@ const FormularioInfante = ({ animatedValue }) => {
 
     return (
         <Animated.View style={[styles.modalView, animatedStyle]}>
+            <Input
+                label="Nombre"
+                placeholder='Nombre del infante'
+                value={nombreSelect}
+                onChangeText={nextValue => {
+                    setNombreSelect(nextValue)
+                    setFormData(prev => ({ ...prev, Nombre: nextValue }))
+                }}
+            />
             <Datepicker
                 label="Fecha de nacimiento"
                 placeholder="Selecciona tu fecha"
@@ -69,8 +80,8 @@ const FormularioInfante = ({ animatedValue }) => {
                 selectedIndex={estaturaSelect}
                 value={estaturaSelect !== '' ? estaturaOptions[estaturaSelect.row] : ''}
                 onSelect={index => {
-                    setEstaturaSelect(index); 
-                    setFormData(prev => ({ ...prev, Estatura: estaturaOptions[estaturaSelect.row] }));
+                    setEstaturaSelect(index);
+                    setFormData(prev => ({ ...prev, Estatura: estaturaOptions[index.row] }));
                 }}
             >
                 {estaturaOptions.map((option, i) => (
@@ -84,8 +95,8 @@ const FormularioInfante = ({ animatedValue }) => {
                 value={pesoSelect !== '' ? pesoOptions[pesoSelect.row] : ''}
                 onSelect={index => {
                     setPesoSelect(index);
-                    setFormData(prev => ({ ...prev, Peso: pesoOptions[pesoSelect.row] }));
-                 }}
+                    setFormData(prev => ({ ...prev, Peso: pesoOptions[index.row] }));
+                }}
             >
                 {pesoOptions.map((option, i) => (
                     <SelectItem key={i} title={option} />
@@ -96,7 +107,7 @@ const FormularioInfante = ({ animatedValue }) => {
                 selectedIndex={comportamiento}
                 onSelect={index => {
                     setComportamiento(index);
-                    setFormData({ ...formData, Comportamiento: comportamientoOptions[index.row] });
+                    setFormData(prev => ({ ...prev, Comportamiento: comportamientoOptions[index.row] }));
                 }}
                 value={formData.Comportamiento}
             >
@@ -119,7 +130,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 20,
         padding: 10,
-        justifyContent:'space-evenly'
+        justifyContent: 'space-evenly'
     },
     input: {
         marginTop: 10,

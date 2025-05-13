@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { StyleSheet, Text, View, Dimensions, Pressable } from 'react-native';
 import Carousel, { Pagination } from 'react-native-reanimated-carousel';
 import { useSharedValue, interpolate, Extrapolation } from 'react-native-reanimated';
@@ -56,7 +56,7 @@ const FormularioInfanteScreen = () => {
         ...questionItems,
     ];
 
-    const { valorStats, setValorStats } = useAuthContext();
+    const { valorStats, setValorStats, formData, setFormData } = useAuthContext();
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     const advancedParallax = useCallback((value) => {
@@ -118,9 +118,33 @@ const FormularioInfanteScreen = () => {
             acc[sectionKey] = normalizeScore(valores);
             return acc;
         }, {});
-
-        setValorStats(nuevosStats);
+        //setValorStats(nuevosStats);
+        setFormData(prev => ({
+            ...prev,
+            ...nuevosStats,     // sobreescribe sólo RegulacionEmociones, SeguimientoInstrucciones, VinculoPadre
+        }))
     };
+
+    /* const totalPreguntas = useMemo(
+        () => carouselData.filter(i => i.type === 'question').length,
+        []
+    ); */
+
+    const formKeysFormulario = ['Nombre', 'Edad', 'Peso', 'Estatura', 'Comportamiento'];
+
+    const formDataLleno = useMemo(() => {
+        return formKeysFormulario.every(key => formData[key] && formData[key].trim() !== '');
+    }, [formData]);
+
+    // cuenta cada vez que cambian las respuestas
+    const respuestasContestadas = useMemo(() => {
+        return Object
+            .values(responses)
+            .reduce((sum, secObj) => sum + Object.keys(secObj).length, 0);
+    }, [responses]);
+
+    const allAnswered = respuestasContestadas === 9;
+    const mostrarBoton = formDataLleno && allAnswered;
 
     return (
         <View style={{ flex: 1 }}>
@@ -132,6 +156,7 @@ const FormularioInfanteScreen = () => {
                 }}>
                 <Text>← Volver</Text>
             </Pressable>
+            {/* {console.log(mostrarBoton+'--'+allAnswered+'--'+formDataLleno+'--'+formData.Nombre+'--'+formData.Edad+'--'+formData.Peso+'--'+formData.Estatura+'--'+formData.Comportamiento)} */}
             <Text style={[styles.titulo]}>Responde el formulario y las preguntas, para avanzar a la siguiente pantalla</Text>
             <Carousel
                 ref={carouselRef}
@@ -162,19 +187,22 @@ const FormularioInfanteScreen = () => {
                 scrollAnimationDuration={800}
                 loop={false}
             />
-            <Pressable
-                onPress={calcularResultados}
-                style={{
-                    padding: 12,
-                    backgroundColor: '#4A1F43',
-                    margin: 16,
-                    borderRadius: 6
-                }}
-            >
-                <Text style={{ color: '#fff', textAlign: 'center' }}>
-                    Calcular Resultados
-                </Text>
-            </Pressable>
+            {mostrarBoton &&
+                <Pressable
+                    onPress={calcularResultados}
+                    style={{
+                        padding: 12,
+                        backgroundColor: '#4A1F43',
+                        margin: 16,
+                        borderRadius: 6
+                    }}
+                >
+                    <Text style={{ color: '#fff', textAlign: 'center' }}>
+                        Calcular Resultados
+                    </Text>
+                </Pressable>
+            }
+
 
             <View style={styles.pagination}>
                 <Pagination.Basic

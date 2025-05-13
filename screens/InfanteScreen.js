@@ -29,14 +29,14 @@ const datos = [
 ];
 
 const InfanteScreen = () => {
-    const { valorStats } = useAuthContext();
+    const { valorStats, formData } = useAuthContext();
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
 
     const estadisticas = [
-        { icono: Emocion, progreso: valorStats.RegulacionEmociones, nombreEstadistica: 'Regulacion de Emociones' },
-        { icono: Seguimiento, progreso: valorStats.SeguimientoInstrucciones, nombreEstadistica: 'Segumiento de Instrucciones' },
-        { icono: Vinculo, progreso: valorStats.VinculoPadre, nombreEstadistica: 'Vinculo con el Padre' },
+        { icono: Emocion, progreso: formData.RegulacionEmociones, nombreEstadistica: 'Regulacion de Emociones' },
+        { icono: Seguimiento, progreso: formData.SeguimientoInstrucciones, nombreEstadistica: 'Segumiento de Instrucciones' },
+        { icono: Vinculo, progreso: formData.VinculoPadre, nombreEstadistica: 'Vinculo con el Padre' },
     ];
 
     const handleFormSubmit = async (data) => {
