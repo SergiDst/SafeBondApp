@@ -1,5 +1,5 @@
 import { database } from '../firebaseConfig';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, set, remove, get } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
 
 export const useGetActividades = () => {
@@ -29,4 +29,32 @@ export const useGetActividades = () => {
     }, []);
 
     return data;
+};
+
+
+export const guardarActividadFavorita = async (userId, actividadId) => {
+  const actividadRef = ref(database, `TBRI/Usuarios/${userId}/ActividadesFavoritas/${actividadId}`);
+  await set(actividadRef, true);
+};
+
+
+export const eliminarActividadFavorita = async (userId, actividadId) => {
+  const actividadRef = ref(database, `TBRI/Usuarios/${userId}/ActividadesFavoritas/${actividadId}`);
+  await remove(actividadRef);
+};
+
+export const verificarActividadFavorita = async (userId, actividadId) => {
+  const actividadRef = ref(database, `TBRI/Usuarios/${userId}/ActividadesFavoritas/${actividadId}`);
+  const snapshot = await get(actividadRef);
+  return snapshot.exists();
+};
+
+export const obtenerFavoritos = async (userId) => {
+  const favsRef = ref(database, `TBRI/Usuarios/${userId}/ActividadesFavoritas`);
+  const snapshot = await get(favsRef);
+  if (snapshot.exists()) {
+    return Object.keys(snapshot.val()); // Devuelve un array con los IDs de las actividades
+  } else {
+    return [];
+  }
 };
