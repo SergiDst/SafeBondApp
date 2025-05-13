@@ -7,6 +7,8 @@ import {
 import React, { useState } from 'react';
 
 export const ComponenteLista = ({ item }) => {
+
+  console.log('ITEM:', item);
   const [liked, setLiked] = useState(false);
   const [fontsLoaded] = useFonts({
     MochiyPopOne_400Regular,
@@ -29,13 +31,13 @@ export const ComponenteLista = ({ item }) => {
       </View>
       <View style={styles.componentText}>
         <Text style={[styles.fuente, { fontSize: 12, marginBottom: 10 }]} numberOfLines={2}>
-          {item.Titulo}
+          {item[0].TituloModal}
         </Text>
         <Text style={[styles.fuente, { fontSize: 9, color: '#49454f' }]} numberOfLines={1}>
-          Categoria • {item.TagsArticulo}
+          Categoria • {item[1]}
         </Text>
         <Text style={[styles.fuente, { fontSize: 9, color: '#49454f' }]} numberOfLines={2}>
-          {item.Texto}
+          {item[0].Contenido}
         </Text>
       </View>
       <View>

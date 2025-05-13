@@ -1,35 +1,80 @@
 import { Pressable, Text, View, StyleSheet, Image, FlatList } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   useFonts,
   MochiyPopOne_400Regular,
 } from '@expo-google-fonts/mochiy-pop-one';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ComponenteLista } from '../components/componentesEjercicios/componenteLista';
+import { useGetActividades } from '../Service/Actividades';
+import { useAuthContext } from '../context/ContextLogin';
+import { useNavigation } from '@react-navigation/native';
 
-const data = [
-  {
-    id: '1',
-    Titulo: 'Artículo 1',
-    tags: 'Salud',
-    Texto: 'Contenido del artículo 1...',
-  },
-  {
-    id: '2',
-    Titulo: 'Artículo 2',
-    tags: 'Crianza',
-    Texto: 'Contenido del artículo 2...',
-  },
-  // ...más artículos
-];
 
 const Ejercicios = () => {
+
+  const { userData } = useAuthContext();
+
+  const navigation = useNavigation();
+  const actividadesData = useGetActividades();
+  console.log('Actividades:', actividadesData);
+
+
+
+  const [mostrarTodos, setMostrarTodos] = useState(false);
+
   const [fontsLoaded] = useFonts({
     MochiyPopOne_400Regular,
   });
 
   const [btnSeleccionado, setBtnSeleccionado] = useState(true);
   const [liked, setLiked] = useState(false);
+  const [dataFiltrada, setDataFiltrada] = useState([]);
+  console.log('User:', userData);
+  useEffect(() => {
+    const actividadesCompletadas = userData.Lecciones
+      ? Object.keys(userData.Lecciones).filter(id => userData.Lecciones[id].completo)
+      : [];
+
+    console.log('Actividades completadas:', actividadesCompletadas);
+
+    const data = actividadesData
+      .filter((item) => item.Lectura1 && item.Actividad1)
+      .flatMap((item) => {
+        const elementos = [];
+        const lecturaID = item.Lectura1.ID;
+        const actividadID = item.Actividad1.ID;
+
+        if (actividadesCompletadas.includes(lecturaID)) {
+          elementos.push({
+            id: lecturaID,
+            tipo: 'Lectura',
+            contenido: item.Lectura1,
+            principio: item.id,
+          });
+        }
+
+        if (actividadesCompletadas.includes(actividadID)) {
+          elementos.push({
+            id: actividadID,
+            tipo: 'Actividad',
+            contenido: item.Actividad1,
+            principio: item.id,
+          });
+        }
+        return elementos;
+      });
+    console.log('Data filtrada:', data);
+    setDataFiltrada(data); // Almacenar los datos filtrados en el estado
+  }, [userData, actividadesData]);
+  console.log('Data filtrada:', dataFiltrada);
+
+
+  const elementosParaMostrar = mostrarTodos ? dataFiltrada : dataFiltrada.slice(0, 3);
+
+  const handleVerMas = () => {
+    setMostrarTodos(!mostrarTodos);
+  };
 
   return (
     <View style={styles.container}>
@@ -58,7 +103,7 @@ const Ejercicios = () => {
                 {
                   borderRightWidth: 1,
                   borderStartStartRadius: 20,
-                  borderStartEndRadius: 20,
+                  borderEndStartRadius: 20,
                 },
                 btnSeleccionado ? styles.btnSeleccionado : '',
               ]}
@@ -72,7 +117,7 @@ const Ejercicios = () => {
                 styles.btn,
                 {
                   borderLeftWidth: 1,
-                  borderEndStartRadius: 20,
+                  borderStartEndRadius: 20,
                   borderEndEndRadius: 20,
                 },
                 !btnSeleccionado ? styles.btnSeleccionado : '',
@@ -87,14 +132,25 @@ const Ejercicios = () => {
       </View>
       {/* contenedor de componente de ejercicio */}
       <FlatList
-        data={data}
+        data={elementosParaMostrar}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ComponenteLista item={item} />}
+        renderItem={({ item }) => (
+          <View style={{ marginBottom: 15 }}>
+            <Text style={[styles.fuente, { fontSize: 12 }]}>
+              Principio: {item.principio}
+            </Text>
+            <Pressable onPress={() => navigation.navigate("Lecciones", {
+                                data: item.contenido,
+                            })}>
+              <ComponenteLista item={[item.contenido, item.principio]} tipo={item.tipo} />
+            </Pressable>
+          </View>
+        )}
       />
       {/* contenedor de boton ver mas*/}
       <View style={styles.contVerMas}>
-        <Pressable style={styles.btnVerMas}>
-          <Text style={[styles.fuente, { fontSize: 12 }]}>Ver Mas</Text>
+        <Pressable style={styles.btnVerMas} onPress={handleVerMas}>
+          <Text style={[styles.fuente, { fontSize: 12 }]}>{mostrarTodos ? 'Ver menos' : 'Ver mas'}</Text>
         </Pressable>
       </View>
     </View>
