@@ -24,7 +24,7 @@ export const ComponenteLista = ({ item }) => {
     <View style={styles.contComponent}>
       <View style={styles.componentImage}>
         <Image
-          source={require('../../assets/Imagen1.png')}
+          source={Articulos ?  require('../../assets/Imagen1.png'): {uri: item.Url.UrlImagen}}
           style={{
             width: '100%',
             height: '100%',
@@ -45,9 +45,12 @@ export const ComponenteLista = ({ item }) => {
         </Text>
       </View>
       <View>
-        <Pressable onPress={() => setLiked(!liked)}>
+        {Articulos ? (
+          <Pressable onPress={() => setLiked(!liked)}>
           <Icon name="heart" size={20} color={liked ? 'red' : 'gray'} />
         </Pressable>
+        ): ''}
+        
       </View>
     </View>
   );
