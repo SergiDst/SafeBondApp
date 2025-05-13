@@ -8,7 +8,11 @@ import React, { useState } from 'react';
 
 export const ComponenteLista = ({ item }) => {
 
+  console.log(Array.isArray(item))
   console.log('ITEM:', item);
+
+  const Articulos = Array.isArray(item);
+
   const [liked, setLiked] = useState(false);
   const [fontsLoaded] = useFonts({
     MochiyPopOne_400Regular,
@@ -31,13 +35,13 @@ export const ComponenteLista = ({ item }) => {
       </View>
       <View style={styles.componentText}>
         <Text style={[styles.fuente, { fontSize: 12, marginBottom: 10 }]} numberOfLines={2}>
-          {item[0].TituloModal}
+          {Articulos ? item[0].TituloModal : item.Titulo}
         </Text>
         <Text style={[styles.fuente, { fontSize: 9, color: '#49454f' }]} numberOfLines={1}>
-          Categoria • {item[1]}
+          Categoria • {Articulos ? item[1] : item.TagsArticulo}
         </Text>
         <Text style={[styles.fuente, { fontSize: 9, color: '#49454f' }]} numberOfLines={2}>
-          {item[0].Contenido}
+          {Articulos ? item[0].Contenido : item.Texto}
         </Text>
       </View>
       <View>
@@ -50,25 +54,25 @@ export const ComponenteLista = ({ item }) => {
 };
 
 const styles = StyleSheet.create({
-    contComponent: {
-        width: '90%',
-        justifyContent: 'center',
-        marginTop: 10,
-        flexDirection: 'row',
-        marginHorizontal: 10,
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderColor: '#cac4d0',
-      },
-      componentImage: {
-        width: 100,
-        height: 65,
-      },
-      componentText: {
-        marginLeft: 10,
-        width: '55%',
-      },
-      fuente: {
-        fontFamily: 'MochiyPopOne_400Regular',
-      },
+  contComponent: {
+    width: '90%',
+    justifyContent: 'center',
+    marginTop: 10,
+    flexDirection: 'row',
+    marginHorizontal: 10,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: '#cac4d0',
+  },
+  componentImage: {
+    width: 100,
+    height: 65,
+  },
+  componentText: {
+    marginLeft: 10,
+    width: '55%',
+  },
+  fuente: {
+    fontFamily: 'MochiyPopOne_400Regular',
+  },
 })

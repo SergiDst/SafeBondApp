@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 
 export const ListaArticulos = (Articulos) => {
 
+    console.log('articulos', Articulos.route.params)
+
     const navigation = useNavigation();
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -24,6 +26,8 @@ export const ListaArticulos = (Articulos) => {
     const onClickClose = () => {
         setModalVisible(false);
     };
+
+    console.log(articulosArray[1].params)
 
     return (
         <View style={styles.contenedor}>
@@ -51,7 +55,7 @@ export const ListaArticulos = (Articulos) => {
 
             {/* Lista de artículos */}
             <FlatList
-                data={articulosArray[1].params.Articulos}
+                data={articulosArray[1].params}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <Pressable onPress={() => onClick(item)}>

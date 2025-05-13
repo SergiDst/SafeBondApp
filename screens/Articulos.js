@@ -39,10 +39,14 @@ const Articulos = () => {
     return <Text>Cargando consejos...</Text>;
   }
 
+  const salu = "Consejo" + Math.floor((Math.random() * 9 ) + 1);
+  const crian = "Consejo" + Math.floor((Math.random() * 9 ) + 1);
+  const segur = "Consejo" + Math.floor((Math.random() * 9 ) + 1);
+
   const consejosData = [
-    dataConsejos.Saludables["Consejo5"],
-    dataConsejos.CrianzaPositiva["Consejo5"],
-    dataConsejos.Seguridad["Consejo5"],
+    dataConsejos.Saludables[salu],
+    dataConsejos.CrianzaPositiva[crian],
+    dataConsejos.Seguridad[segur],
   ];
 
   const consejosEnriquecidos = consejosData.map((consejo, index) => {
@@ -123,9 +127,10 @@ const Articulos = () => {
             </View>
           )}
         />
-        <Pressable onPress={() => navigation.navigate('ListaArticulos',{
-          Articulos: dataArticulos
-        })}>
+        <Pressable onPress={() => {
+          console.log(Object.values(dataArticulos))
+          navigation.navigate('ListaArticulos', Object.values(dataArticulos))
+          }}>
         <Text
           style={{
             fontWeight: 'bold',

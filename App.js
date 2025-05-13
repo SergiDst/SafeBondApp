@@ -4,7 +4,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { Icon, Provider as PaperProvider } from 'react-native-paper';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
@@ -39,7 +39,7 @@ export default function App() {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Image source={require('./assets/icon.png')} style={styles.iconTab} />
+            <Icon source="library" size={24} />
           ),
         }} />
       <Tab.Screen
@@ -48,7 +48,7 @@ export default function App() {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Image source={require('./assets/icon.png')} style={styles.iconTab} />
+            <Icon source="road-variant" size={24} />
           ),
         }} />
       <Tab.Screen
@@ -57,7 +57,7 @@ export default function App() {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Image source={require('./assets/icon.png')} style={styles.iconTab} />
+            <Icon source="account-child" size={24} />
           ),
         }} />
       <Tab.Screen
@@ -66,7 +66,7 @@ export default function App() {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Image source={require('./assets/icon.png')} style={styles.iconTab} />
+           <Icon source="dumbbell" size={24} />
           ),
         }} />
     </Tab.Navigator>
