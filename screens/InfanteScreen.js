@@ -28,7 +28,6 @@ const datos = [
     { icono: Peso, nombreIcono: 'Peso' },
 ];
 
-
 const InfanteScreen = () => {
     const { valorStats } = useAuthContext();
     const navigation = useNavigation();

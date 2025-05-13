@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../context/ContextLogin';
 import { useGetFormulario } from '../Service/Formulario';
 
-/* const prueba = {
+/* const dbData = {
     InstruccionesIniciales: {
         escala: "1 = Casi nunca,2 = Rara vez,3 = A veces,4 = Frecuentemente,5 = Casi siempre",
         instrucciones: "Por favor conteste cada pregunta …",
@@ -37,18 +37,18 @@ const { width, height } = Dimensions.get('window');
 const FormularioInfanteScreen = () => {
     const dbData = useGetFormulario();
 
-    console.log('dataPreguntas', dataPreguntas)
-
-    const questionItems = Object.entries(dbData)
-        .filter(([sectionKey]) => sectionKey !== 'InstruccionesIniciales') // omitimos solo al renderizar
-        .flatMap(([sectionKey, sectionValue]) =>
-            Object.values(sectionValue).map(({ id, Pregunta }) => ({
-                type: 'question',
-                key: `${sectionKey}-${id}`,
-                sectionKey,
-                id,
-                pregunta: Pregunta,
-            }))
+    const questionItems = dbData
+        .filter(item => item.id !== 'InstruccionesIniciales') // omitimos solo esa sección
+        .flatMap(section =>
+            Object.entries(section)
+                .filter(([key]) => key.startsWith('Pregunta'))
+                .map(([_, { id, Pregunta }]) => ({
+                    type: 'question',
+                    key: `${section.id}-${id}`,
+                    sectionKey: section.id,
+                    id,
+                    pregunta: Pregunta,
+                }))
         );
 
     const carouselData = [

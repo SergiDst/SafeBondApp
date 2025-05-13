@@ -4,11 +4,14 @@ import { useNavigation } from '@react-navigation/native';
 import { guardarLeccionCompletada } from '../Service/LeccionesUser';
 import { useAuthContext } from '../context/ContextLogin';
 import { GetUserById } from '../Service/Usario';
+import ModalRecuerdos from '../components/componentesLearningPath/ModalRecuerdos';
 
 const LeccionMapaScreen = ({ route }) => {
     const { userData, setUserData } = useAuthContext();
     const { data } = route.params;
     const navigation = useNavigation();
+    const [showModal, setShowModal] = useState(false);
+    const [imageUrl, setImageUrl] = useState(null);
 
     console.log('DataActividad:', route.params);
 
@@ -56,7 +59,21 @@ const LeccionMapaScreen = ({ route }) => {
                 <TouchableOpacity onPress={() => finalizarActividad()} style={[styles.backButton, { borderColor: 'lightBlue', borderWidth: 1 }]}>
                     <Text style={[styles.backButtonText, { color: 'lightBlue' }]}>Finalizar</Text>
                 </TouchableOpacity>
+                {data.ID.startsWith("A") &&
+                    <Pressable style={[styles.backButton, { borderColor: 'lightBlue', borderWidth: 1 }]}
+                        onPress={() => setShowModal(true)}>
+                        <Text style={[styles.backButtonText, { color: 'lightBlue' }]}>Recuerdo</Text>
+                    </Pressable>
+                }
             </View>
+            <ModalRecuerdos
+                visible={showModal}
+                onDismiss={() => setShowModal(false)}
+                initialTitle="Sube tu foto"
+                onUploadSuccess={(url) => {
+                    setImageUrl(url);
+                    console.log('URL Cloudinary:', url);
+                }} />
         </View >
     )
 }

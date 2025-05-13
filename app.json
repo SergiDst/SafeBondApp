@@ -32,7 +32,10 @@
     },
     "plugins": [
       "expo-router",
-      "expo-dev-client"
+      "expo-dev-client",
+      "expo-camera",{
+        "cameraPermission": "Allow $(SafeBond) to access your camera"
+      }
     ]
   }
 }
