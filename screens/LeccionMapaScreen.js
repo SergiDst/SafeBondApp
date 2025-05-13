@@ -57,9 +57,11 @@ const LeccionMapaScreen = ({ route }) => {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.backButton, { borderColor: 'red', borderWidth: 1 }]}>
                     <Text style={[styles.backButtonText, { color: 'red' }]}>Volver</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => finalizarActividad()} disabled={estaActivo} style={[styles.backButton, { borderColor: 'lightBlue', borderWidth: 1 }]}>
-                    <Text style={[styles.backButtonText, { color: 'lightBlue' }]}>Finalizar</Text>
-                </TouchableOpacity>
+                {userData.Lecciones[data.ID].Recuerdos == '' &&
+                    <TouchableOpacity onPress={() => finalizarActividad()} disabled={estaActivo} style={[styles.backButton, { borderColor: 'lightBlue', borderWidth: 1 }]}>
+                        <Text style={[styles.backButtonText, { color: 'lightBlue' }]}>Finalizar</Text>
+                    </TouchableOpacity>
+                }
                 {data.ID.startsWith("A") &&
                     <Pressable style={[styles.backButton, { borderColor: 'lightBlue', borderWidth: 1 }]}
                         onPress={() => setShowModal(true)}>
@@ -75,11 +77,11 @@ const LeccionMapaScreen = ({ route }) => {
                     setImageUrl(url);
                     console.log('URL Cloudinary:', url);
                 }}
-                activar={(x)=>{
+                activar={(x) => {
                     setEstaActivo(x)
                 }}
                 fotoRecuerdo={userData.Lecciones[data.ID].Recuerdos}
-                />
+            />
         </View >
     )
 }

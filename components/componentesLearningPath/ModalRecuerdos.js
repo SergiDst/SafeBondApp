@@ -43,6 +43,7 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
     useEffect(() => {
         setPhotoUri(fotoRecuerdo)
     }, []);
+
     // Función para abrir cámara y tomar foto
     const handleTakePhoto = async () => {
         const ok = await requestCameraPermission();
@@ -113,20 +114,32 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
                     )}
                 </View>
                 <View style={styles.buttons}>
-                    <Button
-                        mode="contained"
-                        onPress={photoUri ? handleReset : onDismiss}
-                        style={[styles.button, { backgroundColor: '#f44336' }]} // Rojo
-                    >
-                        {photoUri ? 'Retroceder' : 'Cerrar'}
-                    </Button>
-                    <Button
-                        mode="contained"
-                        onPress={photoUri ? handleUpload : handleTakePhoto}
-                        style={[styles.button, { backgroundColor: '#4caf50' }]} // Verde
-                    >
-                        {photoUri ? 'Subir foto' : 'Tomar foto'}
-                    </Button>
+                    {fotoRecuerdo == '' ?
+                        <>
+                            <Button
+                                mode="contained"
+                                onPress={photoUri ? handleReset : onDismiss}
+                                style={[styles.button, { backgroundColor: '#f44336' }]} // Rojo
+                            >
+                                {photoUri ? 'Retroceder' : 'Cerrar'}
+                            </Button>
+                            <Button
+                                mode="contained"
+                                onPress={photoUri ? handleUpload : handleTakePhoto}
+                                style={[styles.button, { backgroundColor: '#4caf50' }]} // Verde
+                            >
+                                {photoUri ? 'Subir foto' : 'Tomar foto'}
+                            </Button>
+                        </>
+                        :
+                        <Button
+                            mode="contained"
+                            onPress={onDismiss}
+                            style={[styles.button, { backgroundColor: '#f44336' }]} // Rojo
+                        >
+                            {'Cerrar'}
+                        </Button>
+                    }
                 </View>
             </Modal>
         </Portal>
