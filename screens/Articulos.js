@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image, FlatList, Pressable, } from 'react-native';
+import { Text, View, StyleSheet, Image, FlatList, Pressable,ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts, MochiyPopOne_400Regular } from '@expo-google-fonts/mochiy-pop-one';
 import Svg, { Polygon } from 'react-native-svg';
@@ -171,10 +171,11 @@ const Articulos = () => {
       </View>
       <View style={styles.consejos}>
         {/*contenedor de los componentes*/}
-
+      
         <View
           style={{ backgroundColor: '#A3CEF3', padding: 15, borderRadius: 10, width: '90%', minHeight: 250, alignItems: 'center', flex: '1' }}>
           {/*componente completo*/}
+          <ScrollView style={{ flex: 1 }}>
           <FlatList
             data={consejosEnriquecidos}
             keyExtractor={(item) => item.id}
@@ -256,6 +257,7 @@ const Articulos = () => {
               </>
             )}
           />
+          </ScrollView>
         </View>
       </View>
     </View>
