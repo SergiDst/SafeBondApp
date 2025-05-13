@@ -12,6 +12,7 @@ const LeccionMapaScreen = ({ route }) => {
     const navigation = useNavigation();
     const [showModal, setShowModal] = useState(false);
     const [imageUrl, setImageUrl] = useState(null);
+    const [estaActivo, setEstaActivo] = useState(true);
 
     console.log('DataActividad:', route.params);
 
@@ -24,7 +25,7 @@ const LeccionMapaScreen = ({ route }) => {
             Calificacion: "",
             completo: true,
             ID: idLeccion,
-            Recuerdos: "",
+            Recuerdos: imageUrl,
             Tiempo: fecha
         };
         guardarLeccionCompletada(userData, idLeccion, nuevaLeccion);
@@ -56,7 +57,7 @@ const LeccionMapaScreen = ({ route }) => {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.backButton, { borderColor: 'red', borderWidth: 1 }]}>
                     <Text style={[styles.backButtonText, { color: 'red' }]}>Volver</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => finalizarActividad()} style={[styles.backButton, { borderColor: 'lightBlue', borderWidth: 1 }]}>
+                <TouchableOpacity onPress={() => finalizarActividad()} disabled={estaActivo} style={[styles.backButton, { borderColor: 'lightBlue', borderWidth: 1 }]}>
                     <Text style={[styles.backButtonText, { color: 'lightBlue' }]}>Finalizar</Text>
                 </TouchableOpacity>
                 {data.ID.startsWith("A") &&
@@ -73,7 +74,12 @@ const LeccionMapaScreen = ({ route }) => {
                 onUploadSuccess={(url) => {
                     setImageUrl(url);
                     console.log('URL Cloudinary:', url);
-                }} />
+                }}
+                activar={(x)=>{
+                    setEstaActivo(x)
+                }}
+                fotoRecuerdo={userData.Lecciones[data.ID].Recuerdos}
+                />
         </View >
     )
 }
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
         marginBottom: 18,
     },
     backButton: {
-        width: '40%',
+        width: '25%',
         paddingVertical: 12,
         borderRadius: 8,
         marginTop: 20,
