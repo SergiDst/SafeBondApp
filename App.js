@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image,View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -15,6 +15,7 @@ import InfanteScreen from './screens/InfanteScreen';
 import Articulos from './screens/Articulos'
 import Ejercicios from './screens/Ejercicios'
 import Login from './screens/Login'
+import ForgotPasswordScreen from './components/componentesLogin/ForgotPasswordScreen'
 import FormularioInfanteScreen from './screens/FormularioInfanteScreen';
 import { ListaArticulos } from './screens/ListaArticulos';
 
@@ -39,36 +40,72 @@ export default function App() {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Icon source="library" size={24} />
+            <View
+              style={[
+                styles.iconContainer,
+                focused && { backgroundColor: 'white', padding: 6 },
+              ]}
+            >
+              <Icon source="library" size={24} color={focused ? 'black' : 'gray'} />
+            </View>
           ),
-        }} />
+        }}
+      />
+
       <Tab.Screen
         name="Camino"
         component={LearningPathScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Icon source="road-variant" size={24} />
+            <View
+              style={[
+                styles.iconContainer,
+                focused && { backgroundColor: 'white', padding: 6 },
+              ]}
+            >
+              <Icon source="road-variant" size={24} color={focused ? 'black' : 'gray'} />
+            </View>
           ),
-        }} />
+        }}
+      />
+
       <Tab.Screen
         name="Infante"
         component={InfanteScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Icon source="account-child" size={24} />
+            <View
+              style={[
+                styles.iconContainer,
+                focused && { backgroundColor: 'white', padding: 6 },
+              ]}
+            >
+              <Icon source="account-child" size={24} color={focused ? 'black' : 'gray'} />
+            </View>
           ),
-        }} />
+        }}
+      />
+
       <Tab.Screen
         name="Ejercicios"
         component={Ejercicios}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-           <Icon source="dumbbell" size={24} />
+            <View
+              style={[
+                styles.iconContainer,
+                focused && { backgroundColor: 'white', padding: 6 },
+              ]}
+            >
+              <Icon source="dumbbell" size={24} color={focused ? 'black' : 'gray'} />
+            </View>
           ),
-        }} />
+        }}
+      />
+
     </Tab.Navigator>
   )
 
@@ -81,6 +118,7 @@ export default function App() {
               <NavigationContainer>
                 <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="Login" component={Login} />
+                   <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />
                   <Stack.Screen name="TabNavigator" component={TabNavigator}></Stack.Screen>
                   <Stack.Screen name="Lecciones" component={LeccionMapaScreen}></Stack.Screen>
                   <Stack.Screen name="ListaArticulos" component={ListaArticulos}></Stack.Screen>
@@ -108,5 +146,10 @@ const styles = StyleSheet.create({
   iconTab: {
     width: 24,
     height: 24,
+  },
+  iconContainer: {
+    borderRadius: 50,  // Hace que el fondo del ícono sea circular
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

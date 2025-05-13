@@ -21,7 +21,12 @@ export const RegisterComponent = () => {
 
     useEffect(() => {
         if(dataRegister.name !== '' && dataRegister.email !== '' && dataRegister.password !== '' && dataRegister.confirmPassword !== ''){
-            setBtnEnable(true)
+            if(dataRegister.password.length > 5 && dataRegister.password == dataRegister.confirmPassword && validateEmail(dataRegister.email)){ 
+                setBtnEnable(true)
+            }else{
+                setBtnEnable(false)
+                Alert.alert('La contraseña debe tener minimo 6 caracteres')
+            }
         } else{
             setBtnEnable(false)
         }
@@ -149,7 +154,7 @@ export const RegisterComponent = () => {
 
     return (
         <>
-            <Text style={styles.titleInputRegister}>Nombre</Text>
+            <Text style={styles.label}>Nombre</Text>
             <TextInput placeholder="Nombre" onChangeText={(text) => {
                 setDataRegister(prev => ({
                     ...prev,
@@ -158,8 +163,9 @@ export const RegisterComponent = () => {
                 if (nameError) {
                     validateName(text);
                 };
-            }} style={styles.inputRegister} />
-            <Text style={styles.titleInputRegister}>Correo</Text>
+            }} style={styles.input}
+            placeholderTextColor="#999" />
+            <Text style={styles.label}>Correo</Text>
             <TextInput placeholder="Correo electrónico" onChangeText={(text) => {
                 setDataRegister(prev => ({
                     ...prev,
@@ -168,8 +174,11 @@ export const RegisterComponent = () => {
                 if (emailError) {
                     validateEmail(text);
                 }
-            }} style={styles.inputRegister} />
-            <Text style={styles.titleInputRegister}>Contraseña</Text>
+            }} style={styles.input}
+            placeholderTextColor="#999" />
+            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+          <Text style={styles.label}>Password</Text> <Text style={{fontSize:12, fontWeight:'bold'}}>Minimo 6 caracteres</Text>
+          </View>
             <TextInput placeholder="Contraseña" minLength={6} onChangeText={(text) => {
                 setDataRegister(prev => ({
                     ...prev,
@@ -179,8 +188,8 @@ export const RegisterComponent = () => {
                 if (dataRegister.confirmPassword && confirmPasswordError) {
                     validateConfirmPassword(dataRegister.confirmPassword);
                 }
-            }} style={styles.inputRegister} secureTextEntry />
-            <Text style={styles.titleInputRegister}>Confirmar contraseña</Text>
+            }} style={styles.input} secureTextEntry placeholderTextColor="#999" />
+            <Text style={styles.label}>Confirmar contraseña</Text>
             <TextInput placeholder="Confirmar contraseña" minLength={6} onChangeText={(text) => {
                 setDataRegister(prev => ({
                     ...prev,
@@ -189,7 +198,7 @@ export const RegisterComponent = () => {
                 if (confirmPasswordError) {
                     validateConfirmPassword(text);
                 }
-            }} style={styles.inputRegister} secureTextEntry />
+            }} style={styles.input} secureTextEntry placeholderTextColor="#999"/>
             <View style={styles.containerBtnHorizontal}>
                 <Pressable style={styles.btnHorizontalLogin} onPress={() => toggleAuthMode()}><Text style={styles.textbtn}>Login</Text></Pressable>
                 <Pressable style={ btnEnable ? styles.btnHorizontalRegister : styles.disable} onPress={() => {

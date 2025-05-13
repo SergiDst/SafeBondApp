@@ -12,17 +12,17 @@ const Login = () => {
                     <Text style={[styles.textTitle, styles.safe]}>SafeB</Text><Text style={[styles.textTitle, styles.bond]}>ond</Text>
                 </View>
                 <View style={styles.containerLogin}>
-                    
-                        <Form></Form>
-                   
+
+                    <Form></Form>
+                    <View style={styles.contPlant}>
+                        <Image
+                            source={require('../assets/plantLog.png')}
+                            style={styles.plantImage}
+                            pointerEvents="none" // 👈 esto hace que no bloquee clics
+                        />
+                    </View>
                 </View>
-                <View style={styles.contPlant}>
-                    <Image
-                        source={require('../assets/plantLog.png')}
-                        style={styles.plantImage}
-                        pointerEvents="none" // 👈 esto hace que no bloquee clics
-                    />
-                </View>
+
             </View>
         </>
     )
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     contTitle: {
         display: 'flex',
         flexDirection: 'row'
-        
+
     },
     container: {
         flex: 1,
@@ -63,11 +63,12 @@ const styles = StyleSheet.create({
         color: '#6dd863'
     },
     contPlant: {
-        flex: 1,
+        position:'absolute',
         alignItems: 'center',
         justifyContent: 'flex-end',
         width: '100%',
-        zIndex: 0,
+        bottom: -25,
+        zIndex: -1,
     },
     plantImage: {
         height: 250,
