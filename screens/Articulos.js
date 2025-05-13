@@ -24,14 +24,14 @@ const iconosPorCategoria = {
 const Articulos = () => {
 
   const { userData } = useAuthContext();
-  
+
   console.log('user', userData)
 
   const [fontsLoaded] = useFonts({
     MochiyPopOne_400Regular,
   });
   const navigation = useNavigation();
-  
+
   const dataArticulos = useGetArticulos();
   const dataConsejos = useGetConsejos();
 
@@ -39,9 +39,9 @@ const Articulos = () => {
     return <Text>Cargando consejos...</Text>;
   }
 
-  const salu = "Consejo" + Math.floor((Math.random() * 9 ) + 1);
-  const crian = "Consejo" + Math.floor((Math.random() * 9 ) + 1);
-  const segur = "Consejo" + Math.floor((Math.random() * 9 ) + 1);
+  const salu = "Consejo" + Math.floor((Math.random() * 9) + 1);
+  const crian = "Consejo" + Math.floor((Math.random() * 9) + 1);
+  const segur = "Consejo" + Math.floor((Math.random() * 9) + 1);
 
   const consejosData = [
     dataConsejos.Saludables[salu],
@@ -73,10 +73,20 @@ const Articulos = () => {
     <View
       style={{ flex: 1 }}>
       <View style={styles.head}>
-        <Text style={{ fontWeight: 'bold', fontSize: 30, marginStart: 5 }}>
-          {'<-'}
-        </Text>
-        <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Articulos</Text>
+        <Pressable onPress={() => navigation.navigate('Login')}
+          style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <Icon
+            name="chevron-left"
+            size={30}
+            color={'#000'}
+          />
+          <Text style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginStart: 5,
+            color: '#000'
+          }}>Volver</Text>
+        </Pressable>
       </View>
       <View style={styles.imageCont}>
         <FlatList
@@ -130,17 +140,17 @@ const Articulos = () => {
         <Pressable onPress={() => {
           console.log(Object.values(dataArticulos))
           navigation.navigate('ListaArticulos', Object.values(dataArticulos))
-          }}>
-        <Text
-          style={{
-            fontWeight: 'bold',
-            position: 'relative',
-            textAlign: 'right',
-            marginEnd: 5,
-            fontFamily: 'MochiyPopOne_400Regular',
-          }}>
-          ver mas... {'->'}
-        </Text></Pressable>
+        }}>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              position: 'relative',
+              textAlign: 'right',
+              marginEnd: 5,
+              fontFamily: 'MochiyPopOne_400Regular',
+            }}>
+            ver mas... {'->'}
+          </Text></Pressable>
       </View>
       {/*componente de consejos*/}
       <View styles={{
@@ -260,9 +270,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   head: {
+    justifyContent:'center',
     backgroundColor: '#FBE7A7',
     width: '100%',
-    height: 90,
+    height: 50,
     borderWidth: 0.1,
     borderColor: '#000',
     paddingHorizontal: 10,

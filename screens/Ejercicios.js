@@ -30,7 +30,6 @@ const Ejercicios = () => {
   });
 
   const [btnSeleccionado, setBtnSeleccionado] = useState(true);
-  const [liked, setLiked] = useState(false);
   const [dataFiltrada, setDataFiltrada] = useState([]);
   console.log('User:', userData);
   useEffect(() => {
@@ -140,7 +139,7 @@ const Ejercicios = () => {
               ]}
               onPress={() => setBtnSeleccionado(true)}>
               <Text style={[styles.fuente, { fontSize: 10 }]}>
-                Favoritos
+                Actividades
               </Text>
             </Pressable>
             <Pressable
@@ -155,7 +154,7 @@ const Ejercicios = () => {
               ]}
               onPress={() => setBtnSeleccionado(false)}>
               <Text style={[styles.fuente, { fontSize: 10 }]}>
-                Actividades
+                Favoritos
               </Text>
             </Pressable>
           </View>
@@ -163,9 +162,9 @@ const Ejercicios = () => {
       </View>
       {/* contenedor de componente de ejercicio */}
       <FlatList
-        data={btnSeleccionado ? favoritos : elementosParaMostrar}
+        data={btnSeleccionado ? elementosParaMostrar : favoritos}
         keyExtractor={(item) => item.id}
-        extraData={btnSeleccionado ? favoritos : ''}
+        extraData={btnSeleccionado ? '' : favoritos}
         renderItem={({ item }) => (
           <View style={{ marginBottom: 15 }}>
             <Text style={[styles.fuente, { fontSize: 12 }]}>
