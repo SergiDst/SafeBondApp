@@ -74,7 +74,7 @@ export const LoginComponent = () => {
         }} />
       <Text style={styles.titleInput}>Password</Text>
       <TextInput placeholder="********" style={styles.input}
-        value={data.password} secureTextEntry onChangeText={(text) => {
+        value={data.password} minLength={6} secureTextEntry onChangeText={(text) => {
           setData(prev => ({
             ...prev,
             password: text
@@ -189,5 +189,16 @@ export const styles = StyleSheet.create({
   textbtn: {
     fontWeight: 'bold',
     fontFamily: 'Mochiy Pop One'
+  },
+  disable:{
+    position: 'absolute',
+    top: 0,
+    right: 0, // O left: 20 para el primer botón
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    backgroundColor: '#9bb89c',
+    borderRadius: 5,
+    elevation: 3, // para sombra en Android
+    zIndex: 1,
   }
 });

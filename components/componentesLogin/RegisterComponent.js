@@ -1,7 +1,7 @@
 import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuthContext } from '../../context/ContextLogin';
 import { set, ref, getDatabase } from 'firebase/database';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TextInput, Pressable, View, Alert } from 'react-native';
 import { styles } from './LoginComponent';
 import { userDataTemplate } from '../../datosIniciales/datosRegistro';
@@ -10,12 +10,22 @@ export const RegisterComponent = () => {
 
     const { toggleAuthMode } = useAuthContext()
 
+    const [btnEnable, setBtnEnable] = useState(false)
+    
     const [dataRegister, setDataRegister] = useState({
         name: '',
         email: '',
         password: '',
         confirmPassword: ''
     })
+
+    useEffect(() => {
+        if(dataRegister.name !== '' && dataRegister.email !== '' && dataRegister.password !== '' && dataRegister.confirmPassword !== ''){
+            setBtnEnable(true)
+        } else{
+            setBtnEnable(false)
+        }
+    }, [dataRegister])
 
     //Validaciones Registro
 
@@ -160,7 +170,7 @@ export const RegisterComponent = () => {
                 }
             }} style={styles.inputRegister} />
             <Text style={styles.titleInputRegister}>Contraseña</Text>
-            <TextInput placeholder="Contraseña" onChangeText={(text) => {
+            <TextInput placeholder="Contraseña" minLength={6} onChangeText={(text) => {
                 setDataRegister(prev => ({
                     ...prev,
                     password: text
@@ -171,7 +181,7 @@ export const RegisterComponent = () => {
                 }
             }} style={styles.inputRegister} secureTextEntry />
             <Text style={styles.titleInputRegister}>Confirmar contraseña</Text>
-            <TextInput placeholder="Confirmar contraseña" onChangeText={(text) => {
+            <TextInput placeholder="Confirmar contraseña" minLength={6} onChangeText={(text) => {
                 setDataRegister(prev => ({
                     ...prev,
                     confirmPassword: text
@@ -182,7 +192,10 @@ export const RegisterComponent = () => {
             }} style={styles.inputRegister} secureTextEntry />
             <View style={styles.containerBtnHorizontal}>
                 <Pressable style={styles.btnHorizontalLogin} onPress={() => toggleAuthMode()}><Text style={styles.textbtn}>Login</Text></Pressable>
-                <Pressable style={styles.btnHorizontalRegister} onPress={() => registrar()}><Text style={styles.textbtn}>Register</Text></Pressable>
+                <Pressable style={ btnEnable ? styles.btnHorizontalRegister : styles.disable} onPress={() => {
+                    if(btnEnable){registrar()}
+                    else{Alert.alert('llene el formulario')}
+                    }}><Text style={styles.textbtn}>Register</Text></Pressable>
             </View>
         </>
     )
