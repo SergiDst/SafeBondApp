@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
 import { Portal, Modal, Button, Title } from 'react-native-paper';
 import { launchCamera } from 'react-native-image-picker';
 
@@ -7,12 +7,46 @@ const CLOUD_NAME = 'YOUR_CLOUD_NAME';
 const UPLOAD_PRESET = 'YOUR_UPLOAD_PRESET';
 const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
+// Función para solicitar permisos de cámara y almacenamiento en Android
+async function requestCameraPermission() {
+    if (Platform.OS !== 'android') return true;
+
+    // Verificar permisos existentes
+    const hasCamera = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
+    const hasWrite = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+    if (hasCamera && hasWrite) return true;
+
+    // Solicitar permisos faltantes
+    const statuses = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    ]);
+
+    return (
+        statuses[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED &&
+        statuses[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] === PermissionsAndroid.RESULTS.GRANTED
+    );
+  }
+
 const ModalRecuerdos = ({visible, onDismiss, initialTitle = 'Título por defecto', onUploadSuccess}) => {
     const [photoUri, setPhotoUri] = useState(null);
     const [title, setTitle] = useState(initialTitle);
-
+    
     // Función para abrir cámara y tomar foto
-    const handleTakePhoto = () => {
+    const handleTakePhoto = async () => {
+        const ok = await requestCameraPermission();
+        if (!ok) {
+            Alert.alert(
+                'Permiso de Cámara',
+                'Necesitamos permiso para usar la cámara. Por favor habilítalo en Configuración.',
+                [
+                    { text: 'Cancelar', style: 'cancel' },
+                    { text: 'Abrir Configuración', onPress: () => Linking.openSettings() },
+                ]
+            );
+            console.error('Permisos de cámara denegados');
+            return;
+          }
         launchCamera({ mediaType: 'photo', saveToPhotos: true }, (response) => {
             if (response.didCancel) {
                 console.error('Fallo la apertura de la camara');
