@@ -7,6 +7,9 @@ import PreguntasInfante from '../components/componentesInfantes/PreguntasInfante
 import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../context/ContextLogin';
 import { useGetFormulario } from '../Service/Formulario';
+import { guardarDatosInfante } from '../Service/InfanteService';
+import {GetUserById} from '../Service/Usario'
+
 
 /* const dbData = {
     InstruccionesIniciales: {
@@ -56,7 +59,7 @@ const FormularioInfanteScreen = () => {
         ...questionItems,
     ];
 
-    const { valorStats, setValorStats, formData, setFormData } = useAuthContext();
+    const { valorStats, setValorStats, formData, setFormData, userData, setUserData } = useAuthContext();
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     const advancedParallax = useCallback((value) => {
@@ -111,6 +114,7 @@ const FormularioInfanteScreen = () => {
     };
 
     const calcularResultados = () => {
+        // 1. Calculas los nuevos stats
         const nuevosStats = Object.keys(valorStats).reduce((acc, sectionKey) => {
             const valores = responses[sectionKey]
                 ? Object.values(responses[sectionKey])
@@ -118,17 +122,30 @@ const FormularioInfanteScreen = () => {
             acc[sectionKey] = normalizeScore(valores);
             return acc;
         }, {});
-        //setValorStats(nuevosStats);
-        setFormData(prev => ({
-            ...prev,
-            ...nuevosStats,     // sobreescribe sólo RegulacionEmociones, SeguimientoInstrucciones, VinculoPadre
-        }))
-    };
 
-    /* const totalPreguntas = useMemo(
-        () => carouselData.filter(i => i.type === 'question').length,
-        []
-    ); */
+        // 2. Construyes el formData actualizado
+        const updatedFormData = {
+            ...formData,
+            ...nuevosStats,  // esto sobreescribe sólo RegulacionEmociones, etc.
+        };
+
+        // 3. Actualizas tus estados
+        setValorStats(nuevosStats);
+        setFormData(updatedFormData);
+
+        // 4. Guardas ENVIANDO el formData ya actualizado
+        guardarDatosInfante(userData, updatedFormData)
+            .then(async() => {
+
+        console.log('iddddd',userData.id)
+              const userDataaa = await  GetUserById(userData.id);
+              setUserData(userDataaa);
+                navigation.navigate('TabNavigator', { screen: 'Infante' });
+            })
+            .catch(err => {
+                console.error('No se pudo guardar en Firebase:', err);
+            });
+    };
 
     const formKeysFormulario = ['Nombre', 'Edad', 'Peso', 'Estatura', 'Comportamiento'];
 
@@ -148,14 +165,6 @@ const FormularioInfanteScreen = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            <Pressable
-                onPress={() => navigation.goBack()}
-                style={{
-                    backgroundColor: '#ddd',
-                    borderRadius: 4,
-                }}>
-                <Text>← Volver</Text>
-            </Pressable>
             {/* {console.log(mostrarBoton+'--'+allAnswered+'--'+formDataLleno+'--'+formData.Nombre+'--'+formData.Edad+'--'+formData.Peso+'--'+formData.Estatura+'--'+formData.Comportamiento)} */}
             <Text style={[styles.titulo]}>Responde el formulario y las preguntas, para avanzar a la siguiente pantalla</Text>
             <Carousel
@@ -204,7 +213,7 @@ const FormularioInfanteScreen = () => {
             }
 
 
-            <View style={styles.pagination}>
+            {/* <View style={styles.pagination}>
                 <Pagination.Basic
                     progress={progress}
                     data={carouselData}
@@ -213,7 +222,7 @@ const FormularioInfanteScreen = () => {
                     containerStyle={{ gap: 5, marginBottom: 10 }}
                     onPress={i => carouselRef.current?.scrollTo({ count: i, animated: true })}
                 />
-            </View>
+            </View> */}
 
         </View>
     )

@@ -1,18 +1,37 @@
 import { getDatabase, ref, set } from 'firebase/database';
 
-export const guardarLeccionCompletada = (userData, formData, datosLeccion) => {
-    const db = getDatabase();
-    const userID = userData?.id; // Asumiendo que `user` viene del contexto
+export const guardarDatosInfante = (userData, formData) => {
+  const db = getDatabase();
+  const userID = userData?.id;
+  const infoNiñoRef = ref(db, `TBRI/Usuarios/${userID}/InfoNiño`);
 
-    // Ruta donde guardarás la lección
-    const leccionRef = ref(db, `TBRI/Usuarios/${userID}/InfoNiño/${idLeccion}`);
-
-    // Datos que quieres guardar
-    set(leccionRef, datosLeccion)
-        .then(() => {
-            console.log('Lección guardada correctamente');
-        })
-        .catch((error) => {
-            console.error('Error al guardar la lección:', error);
-        });
+  // **IMPORTANTE**: devuelve la promesa
+  return set(infoNiñoRef, formData)
+    .then(() => {
+      console.log('Niño guardado correctamente');
+      // opcionalmente puedes devolver algo, ej. formData
+      return formData;
+    })
+    .catch(error => {
+      console.error('Error al guardar la lección:', error);
+      // relanza el error para que tu .catch() exterior lo capture
+      throw error;
+    });
 };
+
+export const actualizarComportamiento = (userData, caracteristica, data) => {
+  const db = getDatabase();
+  const userID = userData?.id;
+
+  // Referencia concreta al campo Comportamiento
+  const comportamientoRef = ref(db, `TBRI/Usuarios/${userID}/InfoNiño/${caracteristica}`);
+
+  set(comportamientoRef, data)
+    .then(() => {
+      console.log('Campo Comportamiento guardado correctamente');
+    })
+    .catch((error) => {
+      console.error('Error al guardar Comportamiento:', error);
+    });
+};
+

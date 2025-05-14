@@ -8,6 +8,8 @@ import Bebe2 from '../../assets/bebe2.svg'
 import Niños from '../../assets/niños.svg'
 import Adolecente1 from '../../assets/adolecente1.svg'
 import Adolecente2 from '../../assets/adolecente2.svg'
+import {actualizarComportamiento} from '../../Service/InfanteService'
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,28 +17,28 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
 
     const { comportamiento, setComportamiento, comportamientoOptions,
         formData, setFormData, birthDate, setBirthDate,
-        pesoOptions, pesoSelect, setPesoSelect, estaturaOptions, estaturaSelect, setEstaturaSelect
+        pesoOptions, pesoSelect, setPesoSelect, estaturaOptions, estaturaSelect, setEstaturaSelect, userData
     } = useAuthContext();
     const [estaActivo, setEstaActivo] = useState(true)
 
     useEffect(() => {
         switch (indexItem) {
             case 0:
-                setEstaActivo(formData.Comportamiento !== '');
+                setEstaActivo(userData.InfoNiño.Comportamiento !== '');
                 break;
             case 1:
-                setEstaActivo(formData.Edad !== '');
+                setEstaActivo(userData.InfoNiño.Edad !== '');
                 break;
             case 2:
-                setEstaActivo(formData.Estatura !== '');
+                setEstaActivo(userData.InfoNiño.Estatura !== '');
                 break;
             case 3:
-                setEstaActivo(formData.Peso !== '');
+                setEstaActivo(userData.InfoNiño.Peso !== '');
                 break;
             default:
                 setEstaActivo(false);
         }
-    }, [indexItem, formData]);
+    }, [indexItem, userData]);
 
     const today = new Date();
     const maxDate = today;
@@ -67,7 +69,6 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
     const handleSaveComportamiento = () => {
         if (comportamiento.row == null) return; // nada seleccionado
         const seleccion = comportamientoOptions[comportamiento.row];
-        // actualiza formData (añade campo "Comportamiento")
         setFormData(prev => ({ ...prev, Comportamiento: seleccion }));
         setEstaActivo(true);
     };
@@ -103,7 +104,6 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
 
                 break;
             default:
-            // opcional: nada o un fallback
         }
     }, [
         indexItem,
@@ -155,7 +155,8 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
     };
 
     const actualizarCampo = (campo, valor) => {
-        setFormData(prev => ({ ...prev, [campo]: valor }));
+        actualizarComportamiento(userData, campo, valor)
+        //setFormData(prev => ({ ...prev, [campo]: valor }));
     };
 
     const actualizarDatosModal = () => {
@@ -163,6 +164,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
             case 0:
                 setComportamiento('')
                 actualizarCampo('Comportamiento', '');
+                //console.log(formData.Comportamiento);
                 setEstaActivo(false)
                 break;
             case 1:
@@ -188,7 +190,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         case 0:
             content = (
                 <>
-                    {formData.Comportamiento == '' ?
+                    {userData.InfoNiño.Comportamiento == '' ?
                         <>
                             <Text style={styles.titulo}>¿Como es tu hijo?</Text>
                             <View>
@@ -210,9 +212,9 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
 
                         </> :
                         <>
-                            <Text style={styles.titulo}>Tu hijo es {comportamientoOptions[comportamiento.row]}</Text>
+                            <Text style={styles.titulo}>Tu hijo es {userData.InfoNiño.Comportamiento}</Text>
                             <View>
-                                {renderSvgsPorComportamiento(formData.Comportamiento)}
+                                {renderSvgsPorComportamiento(userData.InfoNiño.Comportamiento)}
                             </View>
                         </>
                     }
@@ -223,7 +225,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         case 1:
             content = (
                 <>
-                    {formData.Edad == '' ?
+                    {userData.InfoNiño.Edad == '' ?
                         <>
                             <Text style={styles.titulo}>¿Selecciona el dia de nacimiento del niño?</Text>
                             <View>
@@ -243,9 +245,9 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                         <>
                             <Text style={styles.titulo}>Tu hijo tiene:</Text>
                             <View>
-                                <Text style={styles.textStyle}>{formData.Edad} Años</Text>
+                                <Text style={styles.textStyle}>{userData.InfoNiño.Edad} Años</Text>
                                 <View style={styles.columnsContainer}>
-                                    {renderSvgsPorEdad(parseInt(formData.Edad))}
+                                    {renderSvgsPorEdad(parseInt(userData.InfoNiño.Edad))}
                                 </View>
                             </View>
                         </>
@@ -257,7 +259,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         case 2:
             content = (
                 <>
-                    {formData.Estatura == '' ?
+                    {userData.InfoNiño.Estatura == '' ?
                         <>
                             <Text style={styles.titulo}>¿Aproximadamente cuanto mide tu niño?</Text>
                             <Select
@@ -276,7 +278,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                         <>
                             <Text>Estatura</Text>
                             <Text>indice 2</Text>
-                            <Text>{formData.Estatura}</Text>
+                            <Text>{userData.InfoNiño.Estatura}</Text>
                         </>
                     }
                 </>
@@ -285,7 +287,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         case 3:
             content = (
                 <>
-                    {formData.Peso == '' ?
+                    {userData.InfoNiño.Peso == '' ?
                         <>
                             <Text style={styles.titulo}>¿Aproximadamente cuanto pesa tu niño?</Text>
                             <Select
@@ -304,7 +306,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                         <>
                             <Text>Peso</Text>
                             <Text>indice 3</Text>
-                            <Text>{formData.Peso}</Text>
+                            <Text>{userData.InfoNiño.Peso}</Text>
                         </>
                     }
                 </>
