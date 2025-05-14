@@ -6,7 +6,7 @@ import {
 } from '@expo-google-fonts/mochiy-pop-one';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ComponenteLista } from '../components/componentesEjercicios/componenteLista';
-import { useGetActividades } from '../Service/Actividades';
+import { useGetActividades, obtenerFavoritos } from '../Service/Actividades';
 import { useAuthContext } from '../context/ContextLogin';
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,7 +19,9 @@ const Ejercicios = () => {
   const actividadesData = useGetActividades();
   console.log('Actividades:', actividadesData);
 
+  const [refreshFavoritos, setRefreshFavoritos] = useState(false);
 
+  
 
   const [mostrarTodos, setMostrarTodos] = useState(false);
 
@@ -28,7 +30,6 @@ const Ejercicios = () => {
   });
 
   const [btnSeleccionado, setBtnSeleccionado] = useState(true);
-  const [liked, setLiked] = useState(false);
   const [dataFiltrada, setDataFiltrada] = useState([]);
   console.log('User:', userData);
   useEffect(() => {
@@ -70,6 +71,35 @@ const Ejercicios = () => {
   console.log('Data filtrada:', dataFiltrada);
 
 
+  const [favoritos, setFavoritos] = useState([]);
+
+  useEffect(() => {
+    const fetchFavoritos = async () => {
+      const favIds = await obtenerFavoritos(userData.id);
+      console.log('ids favoritos', favIds)
+      const actividadesFavoritas = dataFiltrada.filter(act =>
+        favIds.includes(act.id)
+      );
+      setFavoritos(actividadesFavoritas);
+      console.log('Favoritos:', actividadesFavoritas);
+    };
+
+    fetchFavoritos();
+  }, [userData, dataFiltrada]);
+
+  const fetchFavoritos = async () => {
+    const favIds = await obtenerFavoritos(userData.id);
+    const actividadesFavoritas = dataFiltrada.filter(act =>
+      favIds.includes(act.id)
+    );
+    setFavoritos(actividadesFavoritas);
+  };
+
+  useEffect(() => {
+    fetchFavoritos();
+  }, [userData, dataFiltrada, refreshFavoritos]);
+
+
   const elementosParaMostrar = mostrarTodos ? dataFiltrada : dataFiltrada.slice(0, 3);
 
   const handleVerMas = () => {
@@ -109,7 +139,7 @@ const Ejercicios = () => {
               ]}
               onPress={() => setBtnSeleccionado(true)}>
               <Text style={[styles.fuente, { fontSize: 10 }]}>
-                boton izquierdo
+                Actividades
               </Text>
             </Pressable>
             <Pressable
@@ -124,7 +154,7 @@ const Ejercicios = () => {
               ]}
               onPress={() => setBtnSeleccionado(false)}>
               <Text style={[styles.fuente, { fontSize: 10 }]}>
-                boton derecho
+                Favoritos
               </Text>
             </Pressable>
           </View>
@@ -132,17 +162,22 @@ const Ejercicios = () => {
       </View>
       {/* contenedor de componente de ejercicio */}
       <FlatList
-        data={elementosParaMostrar}
+        data={btnSeleccionado ? elementosParaMostrar : favoritos}
         keyExtractor={(item) => item.id}
+        extraData={btnSeleccionado ? '' : favoritos}
         renderItem={({ item }) => (
           <View style={{ marginBottom: 15 }}>
             <Text style={[styles.fuente, { fontSize: 12 }]}>
               Principio: {item.principio}
             </Text>
             <Pressable onPress={() => navigation.navigate("Lecciones", {
-                                data: item.contenido,
-                            })}>
-              <ComponenteLista item={[item.contenido, item.principio]} tipo={item.tipo} />
+              data: item.contenido,
+            })}>
+              <ComponenteLista
+                item={[item.contenido, item.principio]}
+                tipo={item.tipo}
+                onFavoritoCambiado={() => setRefreshFavoritos(prev => !prev)}
+              />
             </Pressable>
           </View>
         )}
