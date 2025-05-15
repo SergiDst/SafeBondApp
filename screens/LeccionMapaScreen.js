@@ -12,7 +12,14 @@ const LeccionMapaScreen = ({ route }) => {
     const navigation = useNavigation();
     const [showModal, setShowModal] = useState(false);
     const [imageUrl, setImageUrl] = useState(null);
-    const [estaActivo, setEstaActivo] = useState(true);
+    const [estaDeshabilitado, setEstaDeshabilitado] = useState(true);
+
+    useEffect(() => {
+        console.log(userData.Lecciones[data.ID]);
+        if (!data.ID.startsWith("A") && userData.Lecciones[data.ID] == undefined) {
+            setEstaDeshabilitado(false)
+        }
+    }, []);
 
     console.log('DataActividad:', route.params);
 
@@ -57,11 +64,21 @@ const LeccionMapaScreen = ({ route }) => {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.backButton, { borderColor: 'red', borderWidth: 1 }]}>
                     <Text style={[styles.backButtonText, { color: 'red' }]}>Volver</Text>
                 </TouchableOpacity>
-                {userData.Lecciones[data.ID].Recuerdos == '' &&
-                    <TouchableOpacity onPress={() => finalizarActividad()} disabled={estaActivo} style={[styles.backButton, { borderColor: 'lightBlue', borderWidth: 1 }]}>
+
+                {/* <TouchableOpacity onPress={() => finalizarActividad()} disabled={estaDeshabilitado} style={[{ borderColor: 'lightBlue', borderWidth: 1 },
+                [estaDeshabilitado ? styles.btnDisable : styles.backButton]]}>
+                    <Text style={[styles.backButtonText, { color: 'lightBlue' }]}>{userData.Lecciones[data.ID] == undefined ? 'Finalizar' : 'Ya finalizado'}</Text>
+                </TouchableOpacity> */}
+
+                {userData.Lecciones[data.ID] == undefined &&
+                    <TouchableOpacity onPress={() => finalizarActividad()} disabled={estaDeshabilitado} style={[
+                        estaDeshabilitado ? styles.btnDisable : styles.backButton,
+                        { backgroundColor: 'green' }
+                    ]}>
                         <Text style={[styles.backButtonText, { color: 'lightBlue' }]}>Finalizar</Text>
                     </TouchableOpacity>
                 }
+
                 {data.ID.startsWith("A") &&
                     <Pressable style={[styles.backButton, { borderColor: 'lightBlue', borderWidth: 1 }]}
                         onPress={() => setShowModal(true)}>
@@ -78,9 +95,9 @@ const LeccionMapaScreen = ({ route }) => {
                     console.log('URL Cloudinary:', url);
                 }}
                 activar={(x) => {
-                    setEstaActivo(x)
+                    setEstaDeshabilitado(x)
                 }}
-                fotoRecuerdo={userData.Lecciones[data.ID].Recuerdos}
+                fotoRecuerdo={userData.Lecciones?.[data.ID]?.Recuerdos}
             />
         </View >
     )
@@ -125,12 +142,25 @@ const styles = StyleSheet.create({
         marginTop: 20,
         alignItems: 'center',
         marginBottom: 20,
+        borderColor: 'lightBlue',
+        borderWidth: 1
     },
     backButtonText: {
         color: '#fff',
         fontSize: 16,
         fontWeight: '600',
     },
+    btnDisable: {
+        width: '25%',
+        paddingVertical: 12,
+        borderRadius: 8,
+        marginTop: 20,
+        alignItems: 'center',
+        marginBottom: 20,
+        backgroundColor: 'red',
+        borderColor: 'lightBlue',
+        borderWidth: 1
+    }
 });
 
 

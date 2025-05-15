@@ -8,17 +8,16 @@ import Bebe2 from '../../assets/bebe2.svg'
 import Niños from '../../assets/niños.svg'
 import Adolecente1 from '../../assets/adolecente1.svg'
 import Adolecente2 from '../../assets/adolecente2.svg'
-import {actualizarComportamiento} from '../../Service/InfanteService'
-
+import { actualizarComportamiento } from '../../Service/InfanteService'
+import { GetUserById } from '../../Service/Usario'
 
 const { width, height } = Dimensions.get('window');
 
 const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
 
-    const { comportamiento, setComportamiento, comportamientoOptions,
-        formData, setFormData, birthDate, setBirthDate,
-        pesoOptions, pesoSelect, setPesoSelect, estaturaOptions, estaturaSelect, setEstaturaSelect, userData
-    } = useAuthContext();
+    const { comportamiento, setComportamiento, comportamientoOptions, setFormData, birthDate, setBirthDate,
+        pesoOptions, pesoSelect, setPesoSelect, estaturaOptions, estaturaSelect, setEstaturaSelect,
+        userData, setUserData } = useAuthContext();
     const [estaActivo, setEstaActivo] = useState(true)
 
     useEffect(() => {
@@ -62,29 +61,81 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
     const handleSaveAge = () => {
         if (!birthDate) return;
         const edad = calculateAge(birthDate).toString();
-        setFormData(prev => ({ ...prev, Edad: edad }));
-        setEstaActivo(true)
+        actualizarComportamiento(userData, 'Edad', edad)
+            .then(() => {
+                // 2) Actualizo formData
+                setFormData(prev => ({ ...prev, Edad: edad }));
+                // 3) ¡Importante! Actualizo userData para forzar re-render en el switch
+                setUserData(prev => ({
+                    ...prev,
+                    InfoNiño: {
+                        ...prev.InfoNiño,
+                        Edad: edad
+                    }
+                }));
+                setEstaActivo(true);
+            })
+            .catch(console.error);
     };
 
     const handleSaveComportamiento = () => {
         if (comportamiento.row == null) return; // nada seleccionado
         const seleccion = comportamientoOptions[comportamiento.row];
-        setFormData(prev => ({ ...prev, Comportamiento: seleccion }));
-        setEstaActivo(true);
+        actualizarComportamiento(userData, 'Comportamiento', seleccion)
+            .then(() => {
+                // 2) Actualizo formData
+                setFormData(prev => ({ ...prev, Comportamiento: seleccion }));
+                // 3) ¡Importante! Actualizo userData para forzar re-render en el switch
+                setUserData(prev => ({
+                    ...prev,
+                    InfoNiño: {
+                        ...prev.InfoNiño,
+                        Comportamiento: seleccion
+                    }
+                }));
+                setEstaActivo(true);
+            })
+            .catch(console.error);
     };
 
     const handleSavePeso = () => {
         if (pesoSelect.row == null) return;
         const seleccion = pesoOptions[pesoSelect.row];
-        setFormData(prev => ({ ...prev, Peso: seleccion }));
-        setEstaActivo(true);
+        actualizarComportamiento(userData, 'Peso', seleccion)
+            .then(() => {
+                // 2) Actualizo formData
+                setFormData(prev => ({ ...prev, Peso: seleccion }));
+                // 3) ¡Importante! Actualizo userData para forzar re-render en el switch
+                setUserData(prev => ({
+                    ...prev,
+                    InfoNiño: {
+                        ...prev.InfoNiño,
+                        Peso: seleccion
+                    }
+                }));
+                setEstaActivo(true);
+            })
+            .catch(console.error);
     };
 
     const handleSaveEstatura = () => {
         if (estaturaSelect.row == null) return;
-        const seleccion = pesoOptions[estaturaSelect.row];
-        setFormData(prev => ({ ...prev, Estatura: seleccion }));
-        setEstaActivo(true);
+        const seleccion = estaturaOptions[estaturaSelect.row];
+        actualizarComportamiento(userData, 'Estatura', seleccion)
+            .then(() => {
+                // 2) Actualizo formData
+                setFormData(prev => ({ ...prev, Estatura: seleccion }));
+                // 3) ¡Importante! Actualizo userData para forzar re-render en el switch
+                setUserData(prev => ({
+                    ...prev,
+                    InfoNiño: {
+                        ...prev.InfoNiño,
+                        Estatura: seleccion
+                    }
+                }));
+                setEstaActivo(true);
+            })
+            .catch(console.error);
     };
 
 
@@ -107,7 +158,6 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         }
     }, [
         indexItem,
-        // asegúrate de listar aquí todas las dependencias que uses dentro:
         handleSaveComportamiento,
         handleSaveAge,
         handleSaveEstatura,
@@ -154,7 +204,9 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         }
     };
 
-    const actualizarCampo = (campo, valor) => {
+    const actualizarCampo = async (campo, valor) => {
+        const userDataaa = await GetUserById(userData.id);
+        setUserData(userDataaa);
         actualizarComportamiento(userData, campo, valor)
         //setFormData(prev => ({ ...prev, [campo]: valor }));
     };
@@ -162,22 +214,56 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
     const actualizarDatosModal = () => {
         switch (indexItem) {
             case 0:
-                setComportamiento('')
-                actualizarCampo('Comportamiento', '');
-                //console.log(formData.Comportamiento);
-                setEstaActivo(false)
+                actualizarCampo('Comportamiento', '')
+                    .then(() => {
+                        // Limpio formData
+                        setFormData(prev => ({ ...prev, Comportamiento: '' }));
+                        // ¡Y limpio en userData!
+                        setUserData(prev => ({
+                            ...prev,
+                            InfoNiño: { ...prev.InfoNiño, Comportamiento: '' }
+                        }));
+                        setEstaActivo(false);
+                    });
                 break;
             case 1:
-                actualizarCampo('Edad', '');
-                setEstaActivo(false)
+                actualizarCampo('Edad', '')
+                    .then(() => {
+                        // Limpio formData
+                        setFormData(prev => ({ ...prev, Edad: '' }));
+                        // ¡Y limpio en userData!
+                        setUserData(prev => ({
+                            ...prev,
+                            InfoNiño: { ...prev.InfoNiño, Edad: '' }
+                        }));
+                        setEstaActivo(false);
+                    });
                 break;
             case 2:
-                actualizarCampo('Estatura', '');
-                setEstaActivo(false)
+                actualizarCampo('Estatura', '')
+                    .then(() => {
+                        // Limpio formData
+                        setFormData(prev => ({ ...prev, Estatura: '' }));
+                        // ¡Y limpio en userData!
+                        setUserData(prev => ({
+                            ...prev,
+                            InfoNiño: { ...prev.InfoNiño, Estatura: '' }
+                        }));
+                        setEstaActivo(false);
+                    });
                 break;
             case 3:
-                actualizarCampo('Peso', '');
-                setEstaActivo(false)
+                actualizarCampo('Peso', '')
+                .then(() => {
+                    // Limpio formData
+                    setFormData(prev => ({ ...prev, Peso: '' }));
+                    // ¡Y limpio en userData!
+                    setUserData(prev => ({
+                        ...prev,
+                        InfoNiño: { ...prev.InfoNiño, Peso: '' }
+                    }));
+                    setEstaActivo(false);
+                });
                 break;
             default:
                 break;
@@ -267,7 +353,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                                 size='small'
                                 selectedIndex={estaturaSelect}
                                 value={estaturaSelect !== '' ? estaturaOptions[estaturaSelect.row] : ''}
-                                onSelect={index => {setEstaturaSelect(index);}}
+                                onSelect={index => { setEstaturaSelect(index); }}
                             >
                                 {estaturaOptions.map((option, i) => (
                                     <SelectItem key={i} title={option} />
@@ -295,7 +381,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                                 size='small'
                                 selectedIndex={pesoSelect}
                                 value={pesoSelect !== '' ? pesoOptions[pesoSelect.row] : ''}
-                                onSelect={index => {setPesoSelect(index);}}
+                                onSelect={index => { setPesoSelect(index); }}
                             >
                                 {pesoOptions.map((option, i) => (
                                     <SelectItem key={i} title={option} />
@@ -329,15 +415,11 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                             <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(false)}>
                                 <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Cerrar</Text>
                             </Pressable>
-                            {estaActivo ?
-                                <Pressable style={[styles.button, styles.buttonOpen]} onPress={actualizarDatosModal}>
-                                    <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Actualizar</Text>
+                            
+                                <Pressable style={[styles.button, styles.buttonOpen]} onPress={ estaActivo ? actualizarDatosModal :funcionCambiante }>
+                                <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>{estaActivo ? 'Actualizar' : 'Guardar' }</Text>
                                 </Pressable>
-                                :
-                                <Pressable style={[styles.button, styles.buttonOpen]} onPress={funcionCambiante}>
-                                    <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Guardar</Text>
-                                </Pressable>
-                            }
+                            
                         </View>
                     </View>
                 </View>

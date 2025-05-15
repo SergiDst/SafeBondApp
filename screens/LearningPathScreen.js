@@ -29,7 +29,7 @@ const LearningPathScreen = () => {
     const { userData } = useAuthContext();
 
     const actividadesData = useGetActividades();
-    console.log('Actividades:', actividadesData);
+    /* console.log('Actividades:', actividadesData); */
 
     const navigation = useNavigation();
 
@@ -95,9 +95,9 @@ const LearningPathScreen = () => {
         }
 
         setTipoModal(tipo);
-        console.log('Actividad:', actividad);
+        /* console.log('Actividad:', actividad); */
         setDataActividad(actividad);
-        console.log('DataActividad:', DataActividad);
+        /* console.log('DataActividad:', DataActividad); */
         if (actividad) {
             setTituloModal(actividad.TituloModal || titulo);
             setSubtitulo1(actividad.Sub1 || '');
@@ -108,7 +108,7 @@ const LearningPathScreen = () => {
             setTexto1('');
             setTexto2('');
         }
-        console.log('DataActividad:', DataActividad);
+        /* console.log('DataActividad:', DataActividad); */
         setModalVisible(true);
     };
 

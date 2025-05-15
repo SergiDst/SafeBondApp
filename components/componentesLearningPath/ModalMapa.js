@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, View, Image, Pressable, Modal, ActivityIndicator, Animated } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Modal} from 'react-native';
 
 const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
     tituloModal, setTituloModal, subtitulo1, setSubtitulo1,
@@ -19,8 +19,8 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
     }, [modalVisible]);
 
     let content;
-    const data = DataActividad;
-    console.log('tipoModal:', DataActividad);
+    /* const data = DataActividad;
+    console.log('tipoModal:', DataActividad); */
     switch (tipoModal) {
         case '1':
             content = (

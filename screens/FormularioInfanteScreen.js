@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuthContext } from '../context/ContextLogin';
 import { useGetFormulario } from '../Service/Formulario';
 import { guardarDatosInfante } from '../Service/InfanteService';
-import {GetUserById} from '../Service/Usario'
+import { GetUserById } from '../Service/Usario'
 
 
 /* const dbData = {
@@ -132,14 +132,15 @@ const FormularioInfanteScreen = () => {
         // 3. Actualizas tus estados
         setValorStats(nuevosStats);
         setFormData(updatedFormData);
-
+        /* console.log(`Antes: ${formData.Nombre}`, `Se envia: ${updatedFormData.Nombre}`); */
+        
         // 4. Guardas ENVIANDO el formData ya actualizado
         guardarDatosInfante(userData, updatedFormData)
-            .then(async() => {
-
-        console.log('iddddd',userData.id)
-              const userDataaa = await  GetUserById(userData.id);
-              setUserData(userDataaa);
+            .then(async () => {
+                /* console.log(formData);
+                console.log('iddddd', userData) */
+                const userDataaa = await GetUserById(userData.id);
+                setUserData(userDataaa);
                 navigation.navigate('TabNavigator', { screen: 'Infante' });
             })
             .catch(err => {
@@ -207,7 +208,7 @@ const FormularioInfanteScreen = () => {
                     }}
                 >
                     <Text style={{ color: '#fff', textAlign: 'center' }}>
-                        Calcular Resultados
+                        Enviar Respuestas
                     </Text>
                 </Pressable>
             }

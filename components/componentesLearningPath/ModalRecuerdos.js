@@ -41,7 +41,9 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
     const [title, setTitle] = useState(initialTitle);
 
     useEffect(() => {
-        setPhotoUri(fotoRecuerdo)
+        if (fotoRecuerdo !== undefined || fotoRecuerdo !== null || fotoRecuerdo !== '') {
+            setPhotoUri(fotoRecuerdo)
+        }
     }, []);
 
     // Función para abrir cámara y tomar foto
@@ -114,7 +116,7 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
                     )}
                 </View>
                 <View style={styles.buttons}>
-                    {fotoRecuerdo == '' ?
+                    {fotoRecuerdo == undefined || fotoRecuerdo == '' ?
                         <>
                             <Button
                                 mode="contained"
