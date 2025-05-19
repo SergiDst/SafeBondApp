@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, View, Pressable, Modal} from 'react-native';
+import { StyleSheet, Text, View, Pressable, Modal } from 'react-native';
 
 const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
     tituloModal, setTituloModal, subtitulo1, setSubtitulo1,
-    texto1, setTexto1, texto2, setTexto2, DataActividad }) => {
-    
+    texto1, setTexto1, texto2, setTexto2, DataActividad, LecturasRecomendadas, Duracion }) => {
+
     const navigation = useNavigation();
+
+    console.log('DataActividad:', DataActividad);
 
     useEffect(() => {
         if (!modalVisible) {
@@ -27,12 +29,14 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
                 <>
                     <View style={styles.columnsContainer}>
                         <View style={styles.column}>
-                            <Text style={styles.subtitulo} numberOfLines={2}>{subtitulo1}</Text>
-                            <Text style={styles.textStyle} numberOfLines={2}>{texto1}</Text>
+                            <Text style={styles.subtitulo} numberOfLines={2}>Lecturas recomendadas: </Text>
+                            <Text style={styles.textStyle} >{Array.isArray(DataActividad.LecturasRecomendadas) ? DataActividad.LecturasRecomendadas.map((texto, index) => (
+                                <Text key={index}>{texto}</Text>)) : 'No es necesario tener conocimientos previos para esta lectura.'}
+                            </Text>
                         </View>
                         <View style={styles.column}>
-                            <Text style={styles.subtitulo}>Tiempo</Text>
-                            <Text style={styles.textStyle} numberOfLines={2}>{texto2}</Text>
+                            <Text style={styles.subtitulo}>Duracion estimada de la actividad</Text>
+                            <Text style={styles.textStyle} numberOfLines={2}>{DataActividad.Duracion}</Text>
                         </View>
                     </View>
                 </>
@@ -41,8 +45,7 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
         case '2':
             content = (
                 <View>
-                    <Text>{texto1}</Text>
-                    <Text>{texto2}</Text>
+                    <Text>{DataActividad.Contenido}</Text>
                 </View>
             );
             break;
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        paddingTop:20
+        paddingTop: 20
     },
     button: {
         borderRadius: 20,

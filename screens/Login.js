@@ -1,5 +1,5 @@
 import { Form } from '../components/componentesLogin/Form'
-import { StyleSheet, View, Image, Text } from 'react-native'
+import { StyleSheet, View, Image, Text, ScrollView } from 'react-native'
 
 const Login = () => {
     return (
@@ -12,8 +12,9 @@ const Login = () => {
                     <Text style={[styles.textTitle, styles.safe]}>SafeB</Text><Text style={[styles.textTitle, styles.bond]}>ond</Text>
                 </View>
                 <View style={styles.containerLogin}>
-
-                    <Form></Form>
+                    <ScrollView>
+                        <Form></Form>
+                    </ScrollView>
                     <View style={styles.contPlant}>
                         <Image
                             source={require('../assets/plantLog.png')}
@@ -22,7 +23,6 @@ const Login = () => {
                         />
                     </View>
                 </View>
-
             </View>
         </>
     )
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         color: '#6dd863'
     },
     contPlant: {
-        position:'absolute',
+        position: 'absolute',
         alignItems: 'center',
         justifyContent: 'flex-end',
         width: '100%',

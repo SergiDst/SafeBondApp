@@ -110,7 +110,7 @@ export const RegisterComponent = () => {
             .then((userCredential) => {
                 const user = userCredential.user;
                 const uid = user.uid;
-
+                toggleAuthMode();
                 return updateProfile(user, {
                     displayName: dataRegister.name
                 }).then(() => {
@@ -122,7 +122,7 @@ export const RegisterComponent = () => {
                             Nombre: dataRegister.name
                         }
                     };
-
+                    
                     return set(ref(db, `TBRI/Usuarios/${uid}`), userData);
                 }).then(() => {
                     Alert.alert(
@@ -184,10 +184,6 @@ export const RegisterComponent = () => {
                     ...prev,
                     password: text
                 }));
-                if (passwordError) validatePassword(text);
-                if (dataRegister.confirmPassword && confirmPasswordError) {
-                    validateConfirmPassword(dataRegister.confirmPassword);
-                }
             }} style={styles.input} secureTextEntry placeholderTextColor="#999" />
             <Text style={styles.label}>Confirmar contraseña</Text>
             <TextInput placeholder="Confirmar contraseña" minLength={6} onChangeText={(text) => {
@@ -195,9 +191,6 @@ export const RegisterComponent = () => {
                     ...prev,
                     confirmPassword: text
                 }));
-                if (confirmPasswordError) {
-                    validateConfirmPassword(text);
-                }
             }} style={styles.input} secureTextEntry placeholderTextColor="#999"/>
             <View style={styles.containerBtnHorizontal}>
                 <Pressable style={styles.btnHorizontalLogin} onPress={() => toggleAuthMode()}><Text style={styles.textbtn}>Login</Text></Pressable>

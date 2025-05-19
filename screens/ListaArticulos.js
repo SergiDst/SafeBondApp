@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, Image, FlatList, Pressable, Modal, Alert } from 'react-native';
+import { Text, View, StyleSheet, Image, FlatList, Pressable, Modal, Alert, Linking } from 'react-native';
 import { ComponenteLista } from '../components/componentesEjercicios/componenteLista';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
@@ -28,6 +28,10 @@ export const ListaArticulos = (Articulos) => {
     };
 
     console.log(articulosArray[1].params)
+
+    const onClickVerArticulo = () => {
+        Linking.openURL(dataModal.Url.UrlArticulo);
+    }
 
     return (
         <View style={styles.contenedor}>
@@ -88,7 +92,7 @@ export const ListaArticulos = (Articulos) => {
                                 </Pressable>
                                 <Pressable
                                     style={[styles.button, styles.buttonOpen]}
-                                    onPress={() => setModalVisible(!modalVisible)}>
+                                    onPress={() => onClickVerArticulo()}>
                                     <Text style={styles.textStyle}>Ver Articulo</Text>
                                 </Pressable>
                             </View>
