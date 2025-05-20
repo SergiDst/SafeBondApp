@@ -72,6 +72,7 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
             }
             const uri = response.assets[0].uri;
             setPhotoUri(uri);
+            console.log(uri);
             setTitle('¿Deseas conservar la foto?');
         });
     };

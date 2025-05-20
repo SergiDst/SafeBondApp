@@ -5,8 +5,11 @@ import React, { useEffect, useState } from 'react';
 import { Text, TextInput, Pressable, View, Alert } from 'react-native';
 import { styles } from './LoginComponent';
 import { userDataTemplate } from '../../datosIniciales/datosRegistro';
+import { useNavigation } from '@react-navigation/native'
 
 export const RegisterComponent = () => {
+
+    const navigation = useNavigation()
 
     const { toggleAuthMode } = useAuthContext()
 
@@ -25,7 +28,6 @@ export const RegisterComponent = () => {
                 setBtnEnable(true)
             }else{
                 setBtnEnable(false)
-                Alert.alert('La contraseña debe tener minimo 6 caracteres')
             }
         } else{
             setBtnEnable(false)
