@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { StyleSheet, Text, View, Dimensions, FlatList, Pressable } from 'react-native';
+import { StyleSheet, Text, Dimensions } from 'react-native';
 import { Radio, RadioGroup } from '@ui-kitten/components';
 import Animated, {
     useSharedValue,
@@ -8,7 +8,6 @@ import Animated, {
     interpolate,
     Extrapolation
 } from 'react-native-reanimated';
-
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,6 +18,7 @@ const radios = {
 };
 
 const PreguntasInfante = ({ sectionKey, id, pregunta, response, onSelect, animatedValue }) => {
+    /* Animacion de desvanecimiento */
     const animatedTextStyle = useAnimatedStyle(() => {
         const opacity = interpolate(
             animatedValue.value,
@@ -32,16 +32,16 @@ const PreguntasInfante = ({ sectionKey, id, pregunta, response, onSelect, animat
         };
     }, [animatedValue]);
 
+    /* Animacion de aparecimiento de la pregunta */
     const mountFade = useSharedValue(0);
-
     useEffect(() => {
         mountFade.value = withTiming(1, { duration: 500 });
     }, []);
-
     const fadeStyle = useAnimatedStyle(() => {
         return { opacity: mountFade.value };
     }, []);
 
+    /* Adquiere los nombres de las escalas por su key */
     const escalaMap = useMemo(() => {
         const escalaStr = radios.InstruccionesIniciales.escala;
         return escalaStr.split(',').reduce((acc, pair) => {
@@ -63,14 +63,13 @@ const PreguntasInfante = ({ sectionKey, id, pregunta, response, onSelect, animat
             >
                 {[1, 2, 3, 4, 5].map(val => (
                     <Radio key={val}>
-                        {escalaMap[val] /* ahora muestra "Casi nunca", "Rara vez", … */}
+                        {escalaMap[val] /*Muestra las escalas: Casi nunca, Rara vez, etc*/}
                     </Radio>
                 ))}
             </RadioGroup>
         </Animated.View>
     )
 }
-
 
 const styles = StyleSheet.create({
     modalView: {

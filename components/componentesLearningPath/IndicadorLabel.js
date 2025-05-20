@@ -13,6 +13,7 @@ const IndicadorLabel = ({ posicion, icono, numCompletados, numMonedas }) => {
         });
     return (
         <View>
+            {/* Contadores de las monedas y lecciones completadas */}
             <View style={[posicionRecuadro]}>
                 <Text style={{ fontWeight: 'bold', color: 'white', fontFamily: 'MochiyPopOne_400Regular'}}>
                     {icono === 'monedas' ? numMonedas : numCompletados}

@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Image,View } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, View, LogBox } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -20,6 +20,7 @@ import FormularioInfanteScreen from './screens/FormularioInfanteScreen';
 import { ListaArticulos } from './screens/ListaArticulos';
 
 export default function App() {
+  LogBox.ignoreAllLogs(true);
 
   const Tab = createBottomTabNavigator();
   const Stack = createNativeStackNavigator();

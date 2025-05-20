@@ -14,6 +14,7 @@ import Peso from '../assets/Peso.svg'
 
 const { width, height } = Dimensions.get('window');
 
+/* Elementos del carrusel */
 const datos = [
     { icono: Comportamiento, nombreIcono: 'Comportamiento' },
     { icono: Edad, nombreIcono: 'Edad' },
@@ -26,6 +27,7 @@ const InfanteScreen = () => {
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
 
+    /* Si el infante del usuario no tiene datos, aparecera un modal que lo redirije a FormularioInfanteScreen */
     useEffect(() => {
         console.log(userData.InfoNiño);
         const faltaDato = userData?.InfoNiño?.RegulacionEmociones == null || userData.InfoNiño.RegulacionEmociones == '';
@@ -37,6 +39,7 @@ const InfanteScreen = () => {
         }
     }, []);
 
+    /* Actualiza las estadisticas del infante, segun la info del usuario en la db*/
     const estadisticas = useMemo(() => {
         if (!userData?.InfoNiño) return [];
 
@@ -90,6 +93,7 @@ const InfanteScreen = () => {
                 )}
                 ItemSeparatorComponent={() => <View style={{ height: 60 }} />}
             />
+            {/* Modal de redireccion */}
             <Modal
                 animationType="slide"
                 transparent

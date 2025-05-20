@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, Image, Pressable, Dimensions } from 'react-native';
-import { Select, SelectItem, Calendar, Input } from '@ui-kitten/components';
+import { StyleSheet, Text, View, Pressable, Dimensions } from 'react-native';
+import { Select, SelectItem, Calendar } from '@ui-kitten/components';
 import { Modal, Portal } from 'react-native-paper';
 import { useAuthContext } from '../../context/ContextLogin';
 import Bebe1 from '../../assets/bebe1.svg'
@@ -15,11 +15,12 @@ const { width, height } = Dimensions.get('window');
 
 const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
 
-    const { comportamiento, setComportamiento, comportamientoOptions, setFormData, birthDate, setBirthDate,
+    const { comportamiento, setComportamiento, comportamientoOptions, birthDate, setBirthDate,
         pesoOptions, pesoSelect, setPesoSelect, estaturaOptions, estaturaSelect, setEstaturaSelect,
         userData, setUserData } = useAuthContext();
     const [estaActivo, setEstaActivo] = useState(true)
 
+    /* Para activar el boton de actualizacion de datos */
     useEffect(() => {
         switch (indexItem) {
             case 0:
@@ -58,14 +59,15 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         return age;
     };
 
+    /* Funciones para guardar las opciones seleccionadas en la db */
     const handleSaveAge = () => {
         if (!birthDate) return;
         const edad = calculateAge(birthDate).toString();
         actualizarComportamiento(userData, 'Edad', edad)
             .then(() => {
                 // 2) Actualizo formData
-                setFormData(prev => ({ ...prev, Edad: edad }));
-                // 3) ¡Importante! Actualizo userData para forzar re-render en el switch
+                /* setFormData(prev => ({ ...prev, Edad: edad })); */
+                // 3) Actualizo userData para forzar re-render en el switch
                 setUserData(prev => ({
                     ...prev,
                     InfoNiño: {
@@ -84,8 +86,8 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         actualizarComportamiento(userData, 'Comportamiento', seleccion)
             .then(() => {
                 // 2) Actualizo formData
-                setFormData(prev => ({ ...prev, Comportamiento: seleccion }));
-                // 3) ¡Importante! Actualizo userData para forzar re-render en el switch
+                /* setFormData(prev => ({ ...prev, Comportamiento: seleccion })); */
+                // 3) Actualizo userData para forzar re-render en el switch
                 setUserData(prev => ({
                     ...prev,
                     InfoNiño: {
@@ -104,8 +106,8 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         actualizarComportamiento(userData, 'Peso', seleccion)
             .then(() => {
                 // 2) Actualizo formData
-                setFormData(prev => ({ ...prev, Peso: seleccion }));
-                // 3) ¡Importante! Actualizo userData para forzar re-render en el switch
+                /* setFormData(prev => ({ ...prev, Peso: seleccion })); */
+                // 3) Actualizo userData para forzar re-render en el switch
                 setUserData(prev => ({
                     ...prev,
                     InfoNiño: {
@@ -124,8 +126,8 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         actualizarComportamiento(userData, 'Estatura', seleccion)
             .then(() => {
                 // 2) Actualizo formData
-                setFormData(prev => ({ ...prev, Estatura: seleccion }));
-                // 3) ¡Importante! Actualizo userData para forzar re-render en el switch
+                /* setFormData(prev => ({ ...prev, Estatura: seleccion })); */
+                // 3) Actualizo userData para forzar re-render en el switch
                 setUserData(prev => ({
                     ...prev,
                     InfoNiño: {
@@ -138,7 +140,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
             .catch(console.error);
     };
 
-
+    /* Dependiendo del item que se selecciona del carrusel, el boton guardar del modal elige una funcion para guardar */
     const funcionCambiante = useCallback(() => {
         switch (indexItem) {
             case 0:
@@ -164,6 +166,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         handleSavePeso
     ]);
 
+    /* Mostrar un svg correspondiente a la edad del infante */
     const renderSvgsPorEdad = (edad) => {
         if (edad <= 3) {
             return (
@@ -185,6 +188,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
         return <Text>Edad fuera de rango</Text>;
     };
 
+    /* Mostrar el svg correspondiente al comportamiento del infante */
     const renderSvgsPorComportamiento = (comportamiento) => {
         switch (comportamiento) {
             case 'Alocado':
@@ -217,7 +221,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                 actualizarCampo('Comportamiento', '')
                     .then(() => {
                         // Limpio formData
-                        setFormData(prev => ({ ...prev, Comportamiento: '' }));
+                        /* setFormData(prev => ({ ...prev, Comportamiento: '' })); */
                         // ¡Y limpio en userData!
                         setUserData(prev => ({
                             ...prev,
@@ -230,7 +234,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                 actualizarCampo('Edad', '')
                     .then(() => {
                         // Limpio formData
-                        setFormData(prev => ({ ...prev, Edad: '' }));
+                        /* setFormData(prev => ({ ...prev, Edad: '' })); */
                         // ¡Y limpio en userData!
                         setUserData(prev => ({
                             ...prev,
@@ -243,7 +247,7 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                 actualizarCampo('Estatura', '')
                     .then(() => {
                         // Limpio formData
-                        setFormData(prev => ({ ...prev, Estatura: '' }));
+                        /* setFormData(prev => ({ ...prev, Estatura: '' })); */
                         // ¡Y limpio en userData!
                         setUserData(prev => ({
                             ...prev,
@@ -254,24 +258,25 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                 break;
             case 3:
                 actualizarCampo('Peso', '')
-                .then(() => {
-                    // Limpio formData
-                    setFormData(prev => ({ ...prev, Peso: '' }));
-                    // ¡Y limpio en userData!
-                    setUserData(prev => ({
-                        ...prev,
-                        InfoNiño: { ...prev.InfoNiño, Peso: '' }
-                    }));
-                    setEstaActivo(false);
-                });
+                    .then(() => {
+                        // Limpio formData
+                        /* setFormData(prev => ({ ...prev, Peso: '' })); */
+                        // ¡Y limpio en userData!
+                        setUserData(prev => ({
+                            ...prev,
+                            InfoNiño: { ...prev.InfoNiño, Peso: '' }
+                        }));
+                        setEstaActivo(false);
+                    });
                 break;
             default:
                 break;
         }
     };
 
+    /* Dependiendo del item seleccionado en el carrusel y si el infante tiene datos,
+    se muestra un aspecto u otro en el modal */
     let content;
-
     switch (indexItem) {
         case 0:
             content = (
@@ -415,11 +420,11 @@ const ModalCarusel = ({ modalVisible, setModalVisible, indexItem }) => {
                             <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(false)}>
                                 <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>Cerrar</Text>
                             </Pressable>
-                            
-                                <Pressable style={[styles.button, styles.buttonOpen]} onPress={ estaActivo ? actualizarDatosModal :funcionCambiante }>
-                                <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>{estaActivo ? 'Actualizar' : 'Guardar' }</Text>
-                                </Pressable>
-                            
+
+                            <Pressable style={[styles.button, styles.buttonOpen]} onPress={estaActivo ? actualizarDatosModal : funcionCambiante}>
+                                <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>{estaActivo ? 'Actualizar' : 'Guardar'}</Text>
+                            </Pressable>
+
                         </View>
                     </View>
                 </View>

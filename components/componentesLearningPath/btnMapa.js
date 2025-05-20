@@ -15,10 +15,12 @@ const BtnMapa = ({ icono, nombreEstilo, accion, completado }) => {
     return (
         <View style={[estilos, { position: 'relative' }]}>
             {completado && (
+                /* bandera que se renderiza cuando se completa una leccion */
                 <View style={[styles.banderaOverlay, { left: 17.5, pointerEvents: 'none'}]}>
                     <Bandera width={BANDERA_WIDTH} height={BANDERA_HEIGHT} />
                 </View>
             )}
+            {/* Icono del boton */}
             <IconButton
                 style={styles.boton}
                 icon={completado ? 'radiobox-blank' : icono}

@@ -230,6 +230,7 @@ const Articulos = () => {
                         position: 'absolute',
                         marginStart: 25,
                         fontFamily: 'MochiyPopOne_400Regular',
+                        fontSize: 12
                       }}>
                       {item.Principio}
                     </Text>

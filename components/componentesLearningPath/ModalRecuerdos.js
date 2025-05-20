@@ -36,10 +36,11 @@ async function requestCameraPermission() {
     );
 }
 
-const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defecto', onUploadSuccess, activar, fotoRecuerdo }) => {
+const ModalRecuerdos = ({ visible, onDismiss, initialTitle, onUploadSuccess, activar, fotoRecuerdo }) => {
     const [photoUri, setPhotoUri] = useState(null);
     const [title, setTitle] = useState(initialTitle);
 
+    /* Si el usuario ya habia tomado un recuerdo, este aparecera en el modal */
     useEffect(() => {
         if (fotoRecuerdo !== undefined || fotoRecuerdo !== null || fotoRecuerdo !== '') {
             setPhotoUri(fotoRecuerdo)
@@ -80,10 +81,11 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
     // Función para subir imagen a Cloudinary
     const handleUpload = async () => {
         if (!photoUri) return;
-
+        /* Crea el formData */
         const data = new FormData();
         data.append('upload_preset', UPLOAD_PRESET);
         if (Platform.OS === 'web') {
+            /* Si el user esta en web, transforma la foto a Blob */
             try {
                 const response = await fetch(photoUri);
                 const blob = await response.blob();
@@ -94,6 +96,7 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
                 return;
             }
         } else {
+            /* Si el user esta en movil, este es capaz de mandar la foto sin transformación */
             data.append('file', {
                 uri: photoUri,
                 type: 'image/jpeg',
@@ -101,6 +104,7 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
             });
         }
 
+        /* Fetch a la api de cloudinary para guardar la imagen */
         try {
             const res = await fetch(CLOUDINARY_URL, {
                 method: 'POST',
@@ -120,7 +124,7 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
         }
     };
 
-    // Función de retroceso a estado inicial
+    // Función de estado inicial del modal
     const handleReset = () => {
         setPhotoUri(null);
         setTitle(initialTitle);

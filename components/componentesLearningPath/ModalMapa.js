@@ -10,6 +10,7 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
 
     console.log('DataActividad:', DataActividad);
 
+    /* Cuando se cierra el modal se borra el contenido anterior */
     useEffect(() => {
         if (!modalVisible) {
             setTipoModal(null);
@@ -21,8 +22,7 @@ const ModalMapa = ({ modalVisible, setModalVisible, tipoModal, setTipoModal,
     }, [modalVisible]);
 
     let content;
-    /* const data = DataActividad;
-    console.log('tipoModal:', DataActividad); */
+    /* Segun el tipo de modal que se pasa al componente, este renderiza el contenido de diferente manera */
     switch (tipoModal) {
         case '1':
             content = (

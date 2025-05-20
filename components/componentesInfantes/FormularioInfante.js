@@ -7,7 +7,13 @@ import { useAuthContext } from '../../context/ContextLogin';
 const { width, height } = Dimensions.get('window');
 
 const FormularioInfante = ({ animatedValue }) => {
+    const { comportamiento, setComportamiento, comportamientoOptions,
+        formData, setFormData, birthDate, setBirthDate,
+        pesoOptions, pesoSelect, setPesoSelect, estaturaOptions, estaturaSelect, setEstaturaSelect,
+        nombreSelect, setNombreSelect
+    } = useAuthContext();
     
+    /* Animacion de desvanecimiento */
     const animatedStyle = useAnimatedStyle(() => {
         const opacity = interpolate(
             animatedValue.value,
@@ -21,12 +27,7 @@ const FormularioInfante = ({ animatedValue }) => {
         };
     }, []);
 
-    const { comportamiento, setComportamiento, comportamientoOptions,
-        formData, setFormData, birthDate, setBirthDate,
-        pesoOptions, pesoSelect, setPesoSelect, estaturaOptions, estaturaSelect, setEstaturaSelect,
-        nombreSelect, setNombreSelect
-    } = useAuthContext();
-
+    /* Funcion para evitar que user registre un infante mayor a 18 años*/
     const today = new Date();
     const eighteenYearsAgo = new Date(
         today.getFullYear() - 18,
@@ -34,6 +35,7 @@ const FormularioInfante = ({ animatedValue }) => {
         today.getDate()
     );
 
+    /* Funcion que calcula la edad del inftante apartir de la fecha seleccionada */
     const calculateAge = (birthDate) => {
         const now = new Date();
         let age = now.getFullYear() - birthDate.getFullYear();

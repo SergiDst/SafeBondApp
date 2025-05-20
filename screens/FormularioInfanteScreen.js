@@ -38,6 +38,7 @@ import { GetUserById } from '../Service/Usario'
 const { width, height } = Dimensions.get('window');
 
 const FormularioInfanteScreen = () => {
+    /* Trae las preguntas del infante */
     const dbData = useGetFormulario();
 
     const questionItems = dbData
@@ -62,6 +63,7 @@ const FormularioInfanteScreen = () => {
     const { valorStats, setValorStats, formData, setFormData, userData, setUserData } = useAuthContext();
     const [selectedIndex, setSelectedIndex] = useState(0);
 
+    /* Animacion Parallax del carrusel */
     const advancedParallax = useCallback((value) => {
         'worklet';
         const zIndex = Math.round(interpolate(
@@ -106,6 +108,7 @@ const FormularioInfanteScreen = () => {
         }));
     };
 
+    /* Formula de estadisticas */
     const normalizeScore = (values = []) => {
         const n = values.length;
         if (n === 0) return 0;
@@ -113,6 +116,7 @@ const FormularioInfanteScreen = () => {
         return (sum - n) / (4 * n);
     };
 
+    /* Funcion para calcular las estadisticas, segun las preguntas */
     const calcularResultados = () => {
         // 1. Calculas los nuevos stats
         const nuevosStats = Object.keys(valorStats).reduce((acc, sectionKey) => {
@@ -133,7 +137,7 @@ const FormularioInfanteScreen = () => {
         setValorStats(nuevosStats);
         setFormData(updatedFormData);
         /* console.log(`Antes: ${formData.Nombre}`, `Se envia: ${updatedFormData.Nombre}`); */
-        
+
         // 4. Guardas ENVIANDO el formData ya actualizado
         guardarDatosInfante(userData, updatedFormData)
             .then(async () => {
@@ -148,8 +152,8 @@ const FormularioInfanteScreen = () => {
             });
     };
 
+    /* Hasta la linea 169 Verificador de que se contestaron todas las preguntas y seleciones del formulario */
     const formKeysFormulario = ['Nombre', 'Edad', 'Peso', 'Estatura', 'Comportamiento'];
-
     const formDataLleno = useMemo(() => {
         return formKeysFormulario.every(key => formData[key] && formData[key].trim() !== '');
     }, [formData]);

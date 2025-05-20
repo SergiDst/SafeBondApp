@@ -10,6 +10,7 @@ const ITEM_HEIGHT = height / 3.6;
 const ElementosCarusel = ({ icono: Icono, nombreIcono, animatedValue, accion}) => {
     const [fontsLoaded] = useFonts({MochiyPopOne_400Regular,});
     const animatedTextStyle = useAnimatedStyle(() => {
+        /* Opacidad del nombre del icono */
         const opacity = interpolate(
             animatedValue.value,
             [-1, -0.5, 0, 0.5, 1],

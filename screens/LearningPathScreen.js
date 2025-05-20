@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Text, View, Dimensions, FlatList } from 'react-native';
 import { Appbar, IconButton } from 'react-native-paper';
 import BtnMapa from '../components/componentesLearningPath/btnMapa';
@@ -10,6 +9,7 @@ import { useAuthContext } from '../context/ContextLogin';
 
 const { width } = Dimensions.get('window');
 
+/* La estructura de como se arma el mapa */
 const datosIniciales = [
     { icono: 'book-open-variant', tipoModal: '1', tituloModal: 'Lectura ', idContenido: 'L1' },
     { icono: 'map', tipoModal: '1', tituloModal: 'Lecturas Recomendadas', idContenido: 'A1' },
@@ -21,24 +21,25 @@ const datosIniciales = [
     { icono: 'map', tipoModal: '1', tituloModal: 'Favoritos', idContenido: 'A3' },
     { icono: 'key', tipoModal: '1', tituloModal: 'Ejercicios', idContenido: 'Q3' },
 ];
+/* La secuencia de estilos es la ubicacion en la que se renderiza cada item en el flatlist */
 const secuenciaEstilos = ['estilo2', 'estilo3', 'estilo2', 'estilo1'];
+/* Los botones especiales son los quices, estos son grande y amarillos */
 const estilosEspeciales = [2, 5, 8] //Añadir el indice de los botones especiales
 
 const LearningPathScreen = () => {
 
     const { userData } = useAuthContext();
 
+    /* Traer la data de la actividad que se muestra en ModalMapa */
     const actividadesData = useGetActividades();
     /* console.log('Actividades:', actividadesData); */
-
-    const navigation = useNavigation();
-
     const flatListRef = useRef(null);
 
     const [botones, setBotones] = useState([]);
     const [completados, setCompletados] = useState(0);
 
-     useEffect(() => {
+    /* Actualizacion del mapa */
+    useEffect(() => {
         if (userData && userData.Lecciones) {
             const datosActualizados = datosIniciales.map(item => {
                 const leccion = userData.Lecciones[item.idContenido];
@@ -66,6 +67,7 @@ const LearningPathScreen = () => {
     const [texto2, setTexto2] = useState('');
     const [DataActividad, setDataActividad] = useState('');
 
+    /* Funcion para saber la posicion del scroll y asi saber si al presionar un boton debe subir o bajar */
     const handleScroll = (event) => {
         const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
 
@@ -111,7 +113,6 @@ const LearningPathScreen = () => {
         /* console.log('DataActividad:', DataActividad); */
         setModalVisible(true);
     };
-
 
     return (
         <View style={styles.container}>
