@@ -10,28 +10,37 @@ import { useGetActividades, obtenerFavoritos } from '../Service/Actividades';
 import { useAuthContext } from '../context/ContextLogin';
 import { useNavigation } from '@react-navigation/native';
 
-
 const Ejercicios = () => {
 
+  // Contexto de autenticación para obtener los datos del usuario
   const { userData } = useAuthContext();
 
+  // Hook de navegación
   const navigation = useNavigation();
+
+  // Hook personalizado para obtener las actividades
   const actividadesData = useGetActividades();
   console.log('Actividades:', actividadesData);
 
+  // Estado para forzar la recarga de favoritos
   const [refreshFavoritos, setRefreshFavoritos] = useState(false);
 
-
-
+  // Estado para controlar si se muestran todos los elementos o solo algunos
   const [mostrarTodos, setMostrarTodos] = useState(false);
 
+  // Carga de fuentes personalizadas
   const [fontsLoaded] = useFonts({
     MochiyPopOne_400Regular,
   });
 
+  // Estado para saber si está seleccionado el botón de actividades o favoritos
   const [btnSeleccionado, setBtnSeleccionado] = useState(true);
+
+  // Estado para almacenar las actividades completadas y filtradas
   const [dataFiltrada, setDataFiltrada] = useState([]);
   console.log('User:', userData);
+
+  // Efecto para filtrar las actividades completadas del usuario
   useEffect(() => {
     const actividadesCompletadas = userData.Lecciones
       ? Object.keys(userData.Lecciones).filter(id => userData.Lecciones[id].completo)
@@ -70,9 +79,10 @@ const Ejercicios = () => {
   }, [userData, actividadesData]);
   console.log('Data filtrada:', dataFiltrada);
 
-
+  // Estado para almacenar los favoritos del usuario
   const [favoritos, setFavoritos] = useState([]);
 
+  // Efecto para obtener los favoritos del usuario cuando cambia el usuario o los datos filtrados
   useEffect(() => {
     const fetchFavoritos = async () => {
       const favIds = await obtenerFavoritos(userData.id);
@@ -87,6 +97,7 @@ const Ejercicios = () => {
     fetchFavoritos();
   }, [userData, dataFiltrada]);
 
+  // Función para actualizar los favoritos, reutilizada en otro efecto
   const fetchFavoritos = async () => {
     const favIds = await obtenerFavoritos(userData.id);
     const actividadesFavoritas = dataFiltrada.filter(act =>
@@ -95,27 +106,30 @@ const Ejercicios = () => {
     setFavoritos(actividadesFavoritas);
   };
 
+  // Efecto que actualiza favoritos cuando cambia userData, dataFiltrada o se solicita un refresh
   useEffect(() => {
     fetchFavoritos();
   }, [userData, dataFiltrada, refreshFavoritos]);
 
-
+  // Determinar qué elementos mostrar según si se ha hecho clic en "ver más"
   const elementosParaMostrar = mostrarTodos ? dataFiltrada : dataFiltrada.slice(0, 3);
 
+  // Maneja el clic del botón "Ver más"
   const handleVerMas = () => {
     setMostrarTodos(!mostrarTodos);
   };
 
   return (
     <View style={styles.container}>
-      {/* Imagen Prinicpal */}
+      {/* Imagen Principal */}
       <View style={styles.contImage}>
         <Image
           source={require('../assets/Imagen1.png')}
           style={{ width: '100%', height: '100%' }}
         />
       </View>
-      {/* Contenedor de titulos y botones principales */}
+      
+      {/* Contenedor de títulos y botones principales */}
       <View style={styles.head}>
         <View style={styles.contTitulos}>
           <Text style={[styles.fuente, { fontSize: 15 }]}>
@@ -125,8 +139,10 @@ const Ejercicios = () => {
             Actvidades en Familia
           </Text>
         </View>
+
         <View style={styles.contBtns}>
           <View style={styles.aroundBtn}>
+            {/* Botón de Actividades */}
             <Pressable
               style={[
                 styles.btn,
@@ -142,6 +158,7 @@ const Ejercicios = () => {
               <Text style={[styles.fuente, { fontSize: 10 }]}>Actividades</Text>
             </Pressable>
 
+            {/* Botón de Favoritos */}
             <Pressable
               style={[
                 styles.btn,
@@ -160,7 +177,8 @@ const Ejercicios = () => {
           </View>
         </View>
       </View>
-      {/* contenedor de componente de ejercicio */}
+
+      {/* Contenedor del componente de ejercicios */}
       <FlatList
         data={btnSeleccionado ? elementosParaMostrar : favoritos}
         keyExtractor={(item) => item.id}
@@ -182,7 +200,8 @@ const Ejercicios = () => {
           </View>
         )}
       />
-      {/* contenedor de boton ver mas*/}
+
+      {/* Contenedor del botón "Ver más" */}
       <View style={styles.contVerMas}>
         <Pressable style={styles.btnVerMas} onPress={handleVerMas}>
           <Text style={[styles.fuente, { fontSize: 12 }]}>{mostrarTodos ? 'Ver menos' : 'Ver mas'}</Text>
@@ -191,7 +210,7 @@ const Ejercicios = () => {
     </View>
   );
 }
-
+// Estilos para el componente Ejercicios
 const styles = StyleSheet.create({
   container: {
     flex: 1,

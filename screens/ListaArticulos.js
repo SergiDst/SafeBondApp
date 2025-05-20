@@ -4,71 +4,82 @@ import { ComponenteLista } from '../components/componentesEjercicios/componenteL
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
+// Componente que muestra una lista de artículos y abre un modal al hacer clic en uno
 export const ListaArticulos = (Articulos) => {
+    // Muestra por consola los artículos que vienen por parámetros de navegación
+    console.log('articulos', Articulos.route.params);
 
-    console.log('articulos', Articulos.route.params)
-
+    // Hook de navegación de React Navigation
     const navigation = useNavigation();
 
+    // Estado que controla si el modal está visible
     const [modalVisible, setModalVisible] = useState(false);
+
+    // Convierte el objeto recibido en un array de objetos con ID
     const articulosArray = Object.entries(Articulos).map(([id, value]) => ({
         id,
         ...value
     }));
 
+    // Estado que guarda el artículo que se mostrará en el modal
     const [dataModal, setDataModal] = useState('');
 
+    // Función al hacer clic en un artículo
     const onClick = (item) => {
-        setDataModal(item);
-        setModalVisible(true);
+        setDataModal(item);      // Guarda el artículo seleccionado
+        setModalVisible(true);   // Muestra el modal
     };
 
+    // Función para cerrar el modal
     const onClickClose = () => {
         setModalVisible(false);
     };
 
-    console.log(articulosArray[1].params)
+    // Muestra por consola los artículos de la posición [1] del array
+    console.log(articulosArray[1].params);
 
+    // Abre el enlace del artículo en el navegador
     const onClickVerArticulo = () => {
         Linking.openURL(dataModal.Url.UrlArticulo);
     }
 
+    // Render del componente
     return (
         <View style={styles.contenedor}>
             
-            {/* Capa negra semi-transparente cuando el modal está visible */}
+            {/* Capa negra semi-transparente detrás del modal */}
             {modalVisible && <View style={styles.overlay} />}
 
-            {/* Header */}
+            {/* Encabezado con botón para volver */}
             <View style={styles.head}>
-                <Pressable onPress={() => navigation.navigate('TabNavigator')}
-                    style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Icon
-                        name="chevron-left"
-                        size={30}
-                        color={'#000'}
-                    />
+                <Pressable
+                    onPress={() => navigation.navigate('TabNavigator')}
+                    style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+                >
+                    <Icon name="chevron-left" size={30} color={'#000'} />
                     <Text style={{
                         fontSize: 20,
                         fontWeight: 'bold',
                         marginStart: 5,
                         color: '#000'
-                    }}>Volver</Text>
+                    }}>
+                        Volver
+                    </Text>
                 </Pressable>
             </View>
 
-            {/* Lista de artículos */}
+            {/* Lista de artículos renderizados con FlatList */}
             <FlatList
-                data={articulosArray[1].params}
+                data={articulosArray[1].params} // Usa los artículos de la posición [1]
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <Pressable onPress={() => onClick(item)}>
-                        <ComponenteLista item={item} />
+                        <ComponenteLista item={item} /> {/* Componente personalizado que muestra el artículo */}
                     </Pressable>
                 )}
             />
 
-            {/* Modal */}
+            {/* Modal que muestra detalles del artículo seleccionado */}
             <View style={styles.centeredView}>
                 <Modal
                     animationType="slide"
@@ -77,22 +88,32 @@ export const ListaArticulos = (Articulos) => {
                     onRequestClose={() => {
                         Alert.alert('Modal has been closed.');
                         setModalVisible(!modalVisible);
-                    }}>
+                    }}
+                >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
+                            {/* Título del artículo */}
                             <Text style={styles.modalText}>{dataModal.Titulo}</Text>
+
                             <View style={styles.separador} />
+
+                            {/* Contenido del artículo */}
                             <Text style={[styles.modalText, { marginTop: 10 }]}>{dataModal.Texto}</Text>
+
                             <View style={styles.separador} />
+
+                            {/* Botones: cerrar o ver artículo */}
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
                                 <Pressable
                                     style={[styles.button, styles.buttonClose]}
-                                    onPress={() => onClickClose()}>
+                                    onPress={() => onClickClose()}
+                                >
                                     <Text style={styles.textStyle}>Cerrar</Text>
                                 </Pressable>
                                 <Pressable
                                     style={[styles.button, styles.buttonOpen]}
-                                    onPress={() => onClickVerArticulo()}>
+                                    onPress={() => onClickVerArticulo()}
+                                >
                                     <Text style={styles.textStyle}>Ver Articulo</Text>
                                 </Pressable>
                             </View>
@@ -103,6 +124,7 @@ export const ListaArticulos = (Articulos) => {
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     contenedor: {

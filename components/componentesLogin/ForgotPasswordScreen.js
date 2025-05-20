@@ -1,4 +1,3 @@
-// ForgotPasswordScreen.js
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -14,11 +13,14 @@ import {
 } from 'react-native';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
+// Pantalla para recuperación de contraseña
 export default function ForgotPasswordScreen({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [emailError, setEmailError] = useState('');
+  // Estados locales
+  const [email, setEmail] = useState(''); // Correo electrónico del usuario
+  const [isLoading, setIsLoading] = useState(false); // Carga mientras se envía el email
+  const [emailError, setEmailError] = useState(''); // Error de validación de email
 
+  // Validación básica del formato del correo
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
@@ -32,14 +34,17 @@ export default function ForgotPasswordScreen({ navigation }) {
     return true;
   };
 
+  // Maneja el envío del correo para restablecer la contraseña
   const handleResetPassword = () => {
-    if (!validateEmail(email)) return;
+    if (!validateEmail(email)) return; // No continúa si el email es inválido
 
-    setIsLoading(true);
+    setIsLoading(true); // Muestra indicador de carga
     const auth = getAuth();
 
+    // Envía el correo usando Firebase
     sendPasswordResetEmail(auth, email)
       .then(() => {
+        // Muestra alerta y redirige al login
         Alert.alert(
           'Correo enviado',
           'Te hemos enviado un enlace para restablecer tu contraseña.',
@@ -47,9 +52,11 @@ export default function ForgotPasswordScreen({ navigation }) {
         );
       })
       .catch((error) => {
+        // Muestra error si algo falla
         Alert.alert('Error', error.message);
       })
       .finally(() => {
+        // Oculta el indicador de carga
         setIsLoading(false);
       });
   };
@@ -65,6 +72,7 @@ export default function ForgotPasswordScreen({ navigation }) {
           No te preocupes. Ingresa tu correo electrónico y te enviaremos un enlace para recuperarla.
         </Text>
 
+        {/* Campo de entrada del correo */}
         <TextInput
           style={[styles.input, emailError ? styles.inputError : null]}
           placeholder="Correo electrónico"
@@ -72,25 +80,28 @@ export default function ForgotPasswordScreen({ navigation }) {
           value={email}
           onChangeText={(text) => {
             setEmail(text);
-            if (emailError) validateEmail(text);
+            if (emailError) validateEmail(text); // Revalida si ya había error
           }}
           keyboardType="email-address"
           autoCapitalize="none"
         />
+        {/* Muestra mensaje de error si existe */}
         {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
+        {/* Botón para enviar el correo */}
         <TouchableOpacity
           style={[styles.button, isLoading ? styles.buttonDisabled : null]}
           onPress={handleResetPassword}
           disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator color="#ffffff" />
+            <ActivityIndicator color="#ffffff" /> // Indicador de carga
           ) : (
             <Text style={styles.buttonText}>Enviar enlace</Text>
           )}
         </TouchableOpacity>
 
+        {/* Botón para volver a la pantalla de login */}
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.backToLogin}>← Volver al inicio de sesión</Text>
         </TouchableOpacity>
@@ -98,7 +109,6 @@ export default function ForgotPasswordScreen({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

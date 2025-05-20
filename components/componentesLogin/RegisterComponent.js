@@ -7,14 +7,16 @@ import { styles } from './LoginComponent';
 import { userDataTemplate } from '../../datosIniciales/datosRegistro';
 import { useNavigation } from '@react-navigation/native'
 
+// Componente de registro
 export const RegisterComponent = () => {
 
-    const navigation = useNavigation()
+    const navigation = useNavigation() // Hook para navegación
 
-    const { toggleAuthMode } = useAuthContext()
+    const { toggleAuthMode } = useAuthContext() // Cambio entre login y registro
 
-    const [btnEnable, setBtnEnable] = useState(false)
-    
+    const [btnEnable, setBtnEnable] = useState(false) // Estado para habilitar botón
+
+    // Estado para manejar los campos del formulario
     const [dataRegister, setDataRegister] = useState({
         name: '',
         email: '',
@@ -22,6 +24,7 @@ export const RegisterComponent = () => {
         confirmPassword: ''
     })
 
+    // useEffect para validar los campos y habilitar el botón de registro
     useEffect(() => {
         if(dataRegister.name !== '' && dataRegister.email !== '' && dataRegister.password !== '' && dataRegister.confirmPassword !== ''){
             if(dataRegister.password.length > 5 && dataRegister.password == dataRegister.confirmPassword && validateEmail(dataRegister.email)){ 
@@ -92,31 +95,36 @@ export const RegisterComponent = () => {
         return true;
     };
 
+    // Función principal para registrar al usuario
     const registrar = () => {
         console.log('registrar', dataRegister)
 
+        // Validaciones antes de continuar
         const isNameValid = validateName(dataRegister.name);
         const isEmailValid = validateEmail(dataRegister.email);
         const isPasswordValid = validatePassword(dataRegister.password);
         const isConfirmPasswordValid = validateConfirmPassword(dataRegister.confirmPassword);
 
+        // Si alguna validación falla, se detiene
         if (!isNameValid || !isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
             return;
         }
 
-        const auth = getAuth();
+        const auth = getAuth(); // Obtener instancia de autenticación
+        const db = getDatabase(); // Obtener instancia de la base de datos
 
-        const db = getDatabase();
-
+        // Crear usuario con Firebase
         createUserWithEmailAndPassword(auth, dataRegister.email, dataRegister.password)
             .then((userCredential) => {
                 const user = userCredential.user;
                 const uid = user.uid;
-                toggleAuthMode();
+
+                toggleAuthMode(); // Cambiar modo a login
+
                 return updateProfile(user, {
                     displayName: dataRegister.name
                 }).then(() => {
-                    // Clonar el template y actualizar campos dinámicos
+                    // Clonar el template y actualizar con los datos reales
                     const userData = {
                         ...userDataTemplate,
                         InfoUser: {
@@ -125,8 +133,10 @@ export const RegisterComponent = () => {
                         }
                     };
                     
+                    // Guardar en base de datos
                     return set(ref(db, `TBRI/Usuarios/${uid}`), userData);
                 }).then(() => {
+                    // Mostrar alerta de éxito
                     Alert.alert(
                         'Registro Exitoso',
                         '¡Tu cuenta ha sido creada correctamente!',
@@ -135,7 +145,7 @@ export const RegisterComponent = () => {
                 });
             })
             .catch((error) => {
-                // Traducción de errores comunes de Firebase para una mejor UX
+                // Traducción de errores de Firebase
                 let errorMessage;
                 switch (error.code) {
                     case 'auth/email-already-in-use':
@@ -154,6 +164,7 @@ export const RegisterComponent = () => {
             })
     }
 
+    // Renderizado del formulario de registro
     return (
         <>
             <Text style={styles.label}>Nombre</Text>
@@ -167,6 +178,7 @@ export const RegisterComponent = () => {
                 };
             }} style={styles.input}
             placeholderTextColor="#999" />
+
             <Text style={styles.label}>Correo</Text>
             <TextInput placeholder="Correo electrónico" onChangeText={(text) => {
                 setDataRegister(prev => ({
@@ -178,15 +190,18 @@ export const RegisterComponent = () => {
                 }
             }} style={styles.input}
             placeholderTextColor="#999" />
+
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-          <Text style={styles.label}>Password</Text> <Text style={{fontSize:12, fontWeight:'bold'}}>Minimo 6 caracteres</Text>
-          </View>
+                <Text style={styles.label}>Password</Text>
+                <Text style={{fontSize:12, fontWeight:'bold'}}>Minimo 6 caracteres</Text>
+            </View>
             <TextInput placeholder="Contraseña" minLength={6} onChangeText={(text) => {
                 setDataRegister(prev => ({
                     ...prev,
                     password: text
                 }));
             }} style={styles.input} secureTextEntry placeholderTextColor="#999" />
+
             <Text style={styles.label}>Confirmar contraseña</Text>
             <TextInput placeholder="Confirmar contraseña" minLength={6} onChangeText={(text) => {
                 setDataRegister(prev => ({
@@ -194,12 +209,17 @@ export const RegisterComponent = () => {
                     confirmPassword: text
                 }));
             }} style={styles.input} secureTextEntry placeholderTextColor="#999"/>
+
             <View style={styles.containerBtnHorizontal}>
-                <Pressable style={styles.btnHorizontalLogin} onPress={() => toggleAuthMode()}><Text style={styles.textbtn}>Login</Text></Pressable>
+                <Pressable style={styles.btnHorizontalLogin} onPress={() => toggleAuthMode()}>
+                    <Text style={styles.textbtn}>Login</Text>
+                </Pressable>
                 <Pressable style={ btnEnable ? styles.btnHorizontalRegister : styles.disable} onPress={() => {
                     if(btnEnable){registrar()}
                     else{Alert.alert('llene el formulario')}
-                    }}><Text style={styles.textbtn}>Register</Text></Pressable>
+                    }}>
+                    <Text style={styles.textbtn}>Register</Text>
+                </Pressable>
             </View>
         </>
     )

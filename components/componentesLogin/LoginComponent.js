@@ -1,70 +1,70 @@
 import { Pressable, StyleSheet, Text, TextInput, View, Alert } from 'react-native'
 import { useState, useEffect } from 'react'
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import React from 'react'
 import { useAuthContext } from '../../context/ContextLogin'
 import { useNavigation } from '@react-navigation/native'
 import { GetUserById } from '../../Service/Usario'
 
-
 export const LoginComponent = () => {
-
-
-  const [btnEnable, setBtnEnable] = useState(false)
-  const navigation = useNavigation()
-  const [isChargging, setIsCharging] = useState(false)
-  const { toggleAuthMode, setUserData } = useAuthContext()
-
+  // Estados para los inputs del formulario
   const [data, setData] = useState({
     userName: '',
     password: ''
-  })
+  });
 
+  // Controla si el botón está habilitado
+  const [btnEnable, setBtnEnable] = useState(false);
 
+  // Controla si se está cargando la información
+  const [isChargging, setIsCharging] = useState(false);
+
+  // Navegación entre pantallas
+  const navigation = useNavigation();
+
+  // Funciones del contexto de autenticación
+  const { toggleAuthMode, setUserData } = useAuthContext();
+
+  // Valida el formato del correo electrónico
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) {
-      return false;
-    } else if (!emailRegex.test(email)) {
-      return false;
-    }
-    return true;
+    return !!(email && emailRegex.test(email));
   };
 
+  // Activa o desactiva el botón según la validez de los campos
   useEffect(() => {
-    if (data.userName !== '' && data.password !== '') {
-      if (validateEmail(data.userName) && data.password.length > 5) {
-        setBtnEnable(true)
-      } else {
-        setBtnEnable(false)
-      }
+    if (data.userName && data.password) {
+      setBtnEnable(validateEmail(data.userName) && data.password.length > 5);
     } else {
-      setBtnEnable(false)
+      setBtnEnable(false);
     }
-  }, [data])
+  }, [data]);
 
+  // Función para iniciar sesión
   const logear = async () => {
-    setIsCharging(true)
+    setIsCharging(true);
     const auth = getAuth();
+
     try {
+      // Inicia sesión con Firebase
       const userCredentials = await signInWithEmailAndPassword(auth, data.userName, data.password);
       const user = userCredentials.user;
-      console.log('entro', user.uid);
+      console.log('Usuario autenticado:', user.uid);
 
-      // Obtener los datos del usuario usando el UID
+      // Consulta los datos del usuario por UID
       const userData = await GetUserById(user.uid);
 
       if (userData) {
         setUserData(userData);
-        console.log('userData obtenido:', userData); // Aquí deberías ver los datos correctamente
+        console.log('Datos del usuario obtenidos:', userData);
       } else {
         console.log('No se encontraron datos para este usuario');
       }
 
-      setIsCharging(false);
+      // Navega al dashboard principal
       navigation.replace('TabNavigator');
     } catch (error) {
-      setIsCharging(false)
+      // Manejo de errores según el código
       let errorMessage;
       switch (error.code) {
         case 'auth/user-not-found':
@@ -79,16 +79,19 @@ export const LoginComponent = () => {
         default:
           errorMessage = error.message;
       }
-      setIsCharging(false)
       Alert.alert('Error', errorMessage);
     }
-    setIsCharging(false)
+
+    setIsCharging(false);
   }
 
   return (
     <>
-      {isChargging ? (<Text>Cargando...</Text>) : (
+      {isChargging ? (
+        <Text>Cargando...</Text>
+      ) : (
         <>
+          {/* Campo de usuario */}
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.label}>Username</Text>
             <TextInput
@@ -105,6 +108,7 @@ export const LoginComponent = () => {
             />
           </View>
 
+          {/* Campo de contraseña */}
           <View style={{ marginBottom: 10 }}>
             <Text style={styles.label}>Password</Text>
             <TextInput
@@ -123,6 +127,7 @@ export const LoginComponent = () => {
             />
           </View>
 
+          {/* Link para recuperar contraseña */}
           <Pressable
             style={styles.messagePassword}
             onPress={() => navigation.navigate('ForgotPasswordScreen')}
@@ -130,7 +135,9 @@ export const LoginComponent = () => {
             <Text style={styles.textbtnForgot}>¿Olvidaste tu contraseña?</Text>
           </Pressable>
 
+          {/* Botones de acción */}
           <View style={styles.containerBtn}>
+            {/* Botón de Login */}
             <Pressable
               style={[styles.btn, btnEnable ? styles.btnLogin : styles.btnLoginDisable]}
               onPress={() => {
@@ -144,6 +151,7 @@ export const LoginComponent = () => {
               <Text style={styles.textbtn}>Login</Text>
             </Pressable>
 
+            {/* Botón para cambiar al modo de registro */}
             <Pressable
               style={[styles.btn, styles.btnRegister]}
               onPress={() => toggleAuthMode()}
@@ -156,7 +164,7 @@ export const LoginComponent = () => {
     </>
   )
 }
-
+// Estilos para el componente de Login
 export const styles = StyleSheet.create({
   messagePassword: {
     alignItems: 'flex-end',
