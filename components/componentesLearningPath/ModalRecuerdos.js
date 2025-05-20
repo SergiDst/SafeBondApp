@@ -80,22 +80,43 @@ const ModalRecuerdos = ({ visible, onDismiss, initialTitle = 'Título por defect
     // Función para subir imagen a Cloudinary
     const handleUpload = async () => {
         if (!photoUri) return;
+
+        const data = new FormData();
+        data.append('upload_preset', UPLOAD_PRESET);
+        if (Platform.OS === 'web') {
+            try {
+                const response = await fetch(photoUri);
+                const blob = await response.blob();
+                data.append('file', blob, 'photo.jpg');
+            } catch (err) {
+                console.error('Web: no pude convertir URI a Blob', err);
+                Alert.alert('Error', 'No se pudo procesar la imagen en web');
+                return;
+            }
+        } else {
+            data.append('file', {
+                uri: photoUri,
+                type: 'image/jpeg',
+                name: 'photo.jpg',
+            });
+        }
+
         try {
-            const blob = await (await fetch(photoUri)).blob();
-            const data = new FormData();
-            data.append('file', blob, 'photo.jpg');
-            data.append('upload_preset', UPLOAD_PRESET);
             const res = await fetch(CLOUDINARY_URL, {
                 method: 'POST',
                 body: data,
             });
+            if (!res.ok) {
+                throw new Error(`Status ${res.status}`);
+            }
             const result = await res.json();
-            console.log(result);
+            console.log('¡Subida correcta!', result);
             onUploadSuccess(result.secure_url);
-            activar(false)
+            activar(false);
             onDismiss();
         } catch (err) {
             console.error('Error al subir a Cloudinary:', err);
+            Alert.alert('Error de subida', err.message);
         }
     };
 

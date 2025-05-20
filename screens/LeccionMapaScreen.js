@@ -65,16 +65,9 @@ const LeccionMapaScreen = ({ route }) => {
                     <Text style={[styles.backButtonText, { color: 'red' }]}>Volver</Text>
                 </TouchableOpacity>
 
-                {/* <TouchableOpacity onPress={() => finalizarActividad()} disabled={estaDeshabilitado} style={[{ borderColor: 'lightBlue', borderWidth: 1 },
-                [estaDeshabilitado ? styles.btnDisable : styles.backButton]]}>
-                    <Text style={[styles.backButtonText, { color: 'lightBlue' }]}>{userData.Lecciones[data.ID] == undefined ? 'Finalizar' : 'Ya finalizado'}</Text>
-                </TouchableOpacity> */}
-
                 {userData.Lecciones[data.ID] == undefined &&
-                    <TouchableOpacity onPress={() => finalizarActividad()} disabled={estaDeshabilitado} style={[
-                        estaDeshabilitado ? styles.btnDisable : styles.backButton,
-                        { backgroundColor: 'green' }
-                    ]}>
+                    <TouchableOpacity onPress={() => finalizarActividad()} disabled={estaDeshabilitado}
+                        style={estaDeshabilitado ? styles.btnDisable : styles.btnEnable}>
                         <Text style={[styles.backButtonText, { color: 'lightBlue' }]}>Finalizar</Text>
                     </TouchableOpacity>
                 }
@@ -158,6 +151,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
         backgroundColor: 'red',
+        borderColor: 'lightBlue',
+        borderWidth: 1
+    },
+    btnEnable: {
+        width: '25%',
+        paddingVertical: 12,
+        borderRadius: 8,
+        marginTop: 20,
+        alignItems: 'center',
+        marginBottom: 20,
+        backgroundColor: 'green',
         borderColor: 'lightBlue',
         borderWidth: 1
     }
