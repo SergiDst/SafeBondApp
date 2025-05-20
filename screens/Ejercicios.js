@@ -21,7 +21,7 @@ const Ejercicios = () => {
 
   const [refreshFavoritos, setRefreshFavoritos] = useState(false);
 
-  
+
 
   const [mostrarTodos, setMostrarTodos] = useState(false);
 
@@ -132,31 +132,31 @@ const Ejercicios = () => {
                 styles.btn,
                 {
                   borderRightWidth: 1,
-                  borderStartStartRadius: 20,
-                  borderEndStartRadius: 20,
+                  borderTopLeftRadius: 20,
+                  borderBottomLeftRadius: 20,
                 },
-                btnSeleccionado ? styles.btnSeleccionado : '',
+                btnSeleccionado ? styles.btnSeleccionado : null,
               ]}
-              onPress={() => setBtnSeleccionado(true)}>
-              <Text style={[styles.fuente, { fontSize: 10 }]}>
-                Actividades
-              </Text>
+              onPress={() => setBtnSeleccionado(true)}
+            >
+              <Text style={[styles.fuente, { fontSize: 10 }]}>Actividades</Text>
             </Pressable>
+
             <Pressable
               style={[
                 styles.btn,
                 {
                   borderLeftWidth: 1,
-                  borderStartEndRadius: 20,
-                  borderEndEndRadius: 20,
+                  borderTopRightRadius: 20,
+                  borderBottomRightRadius: 20,
                 },
-                !btnSeleccionado ? styles.btnSeleccionado : '',
+                !btnSeleccionado ? styles.btnSeleccionado : null,
               ]}
-              onPress={() => setBtnSeleccionado(false)}>
-              <Text style={[styles.fuente, { fontSize: 10 }]}>
-                Favoritos
-              </Text>
+              onPress={() => setBtnSeleccionado(false)}
+            >
+              <Text style={[styles.fuente, { fontSize: 10 }]}>Favoritos</Text>
             </Pressable>
+
           </View>
         </View>
       </View>
